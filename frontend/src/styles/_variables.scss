@@ -1,0 +1,41 @@
+$font-stack: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$bp-mobile: 576px;
+$bp-tablet: 768px;
+$bp-desktop: 1024px;
+$bp-wide: 1440px;
+
+:root {
+// Nền và chữ
+  --color-text-primary: #000000;         // Đen
+  --color-text-secondary: #555555;       // Xám đậm cho mô tả
+  --color-background-primary: #ffffff;   // Trắng (Nền trang)
+  --color-background-secondary: #f4f4f4; // Xám nhạt (Nền khối/card)
+  
+  // Màu nhấn (Thương hiệu)
+  --color-accent: #f15e2c;               // Cam (Nút Mua Hàng, Giảm giá)
+  --color-accent-hover: #e04a18;         // Cam đậm hơn khi hover
+  --color-border: #e0e0e0;
+}
+
+// Định nghĩa các CSS Variables cho Dark Mode
+[data-theme='dark'] {
+// Nền và chữ đảo ngược
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #aaaaaa;
+  --color-background-primary: #181818; // Nền đen sâu
+  --color-background-secondary: #252525; // Nền các khối/card
+  
+  // Màu nhấn vẫn giữ (đảm bảo thương hiệu)
+  --color-accent: #f15e2c;               
+  --color-accent-hover: #ff7f4a;         // Có thể làm sáng hơn một chút để nổi bật
+  --color-border: #444444;
+}
+
+// SCSS Variables: Dùng để tham chiếu đến CSS Variables
+// Các biến này được dùng trong các file SCSS component
+$text-primary: var(--color-text-primary);
+$bg-primary: var(--color-background-primary);
+$bg-secondary: var(--color-background-secondary);
+$accent: var(--color-accent);
+$accent-hover: var(--color-accent-hover);
+$border: var(--color-border);

@@ -1,0 +1,28 @@
+@use "./variables.scss" as v ;
+// ==========================================================
+// BREAKPOINT MIXINS (Sử dụng Mobile-First)
+// ==========================================================
+
+@mixin mobile{
+    @media (min-width :v.$bp-mobile) {
+        @content ;
+    }
+}
+
+@mixin tablet{
+    @media (min-width :v.$bp-tablet) {
+        @content ;
+    }
+}
+
+@mixin bp-wide{
+    @media (min-width :v.$bp-desktop) {
+        @content ;
+    }
+}
+
+@mixin tablet{
+    @media (min-width :v.$bp-wide) {
+        @content ;
+    }
+}
