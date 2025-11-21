@@ -3,8 +3,10 @@ import React from "react";
 const LoginPage = () => {
   return (
     <>
-      <div>
-        <img src="" />
+      <div className="">
+        <div>
+          <img src="../../assets/ananas_logo.svg" />
+        </div>
       </div>
       <div></div>
     </>

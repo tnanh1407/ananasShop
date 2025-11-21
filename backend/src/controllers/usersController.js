@@ -9,9 +9,10 @@ const generateToken = (id) => {
   });
 };
 
-// FUNCTION REGISTER
+// --- FUNCTION REGISTER ---
 export const registerUserController = async (req, res) => {
-  const { fullname, email, password, username } = req.body;
+  const { fullname, password, username } = req.body;
+  const email = req.body.email ? req.body.email.toLowerCase() : null;
 
   try {
     // 1. Kiểm tra xem trường bắt buộc đã được nhập chưa
@@ -23,11 +24,11 @@ export const registerUserController = async (req, res) => {
 
     // 2. Kiểm tra xem người dùng đã tồn tại chưa
     const userExists = await User.findOne({
-      $or: [{ email: email.toLowerCase() }, { username: username }],
+      $or: [{ email: email }, { username: username }],
     });
 
     if (userExists) {
-      if (userExists.email === email.toLowerCase()) {
+      if (userExists.email === email) {
         return res.status(400).json({ message: "Email đã được đăng ký." });
       }
       if (userExists.username === username) {
@@ -49,7 +50,7 @@ export const registerUserController = async (req, res) => {
     });
 
     if (user) {
-      res.status(200).json({
+      res.status(201).json({
         _id: user._id,
         fullname: user.fullname,
         email: user.email,
@@ -65,7 +66,7 @@ export const registerUserController = async (req, res) => {
   }
 };
 
-// function login
+// --- FUNCTION LOGIN ---
 export const loginUserController = async (req, res) => {
   const { accountIdentifier, password } = req.body;
 
@@ -87,49 +88,35 @@ export const loginUserController = async (req, res) => {
 
     const user = await User.findOne({ $or: findConditions });
 
-    // 3. Kiểm tra sự tồn tại của người dùng
-    if (!user) {
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const userResponse = user.toObject();
+      delete userResponse.password;
+
+      return res.status(200).json({
+        message: "Đăng nhập thành công !",
+        user: userResponse,
+        token: generateToken(user._id),
+      });
+    } else {
       return res.status(401).json({
-        // Nên gộp thông báo lỗi để tránh người dùng dò ra được email/username đã tồn tại hay chưa
         message:
-          "Thông tin đăng nhập không hợp lệ (Tài khoản hoặc Mật khẩu không đúng)",
+          "Thông tin đăng nhập không hợp lệ (Tài khoản hoặc Mật khẩu sai) ",
       });
     }
-
-    // 4. Kiểm tra mật khẩu (Bắt buộc)
-    // Lưu ý: Cần import thư viện 'bcrypt' (hoặc tương đương)
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(401).json({
-        // Sử dụng cùng một thông báo lỗi như trên để tăng bảo mật
-        message:
-          "Thông tin đăng nhập không hợp lệ (Tài khoản hoặc Mật khẩu không đúng)",
-      });
-    }
-
-    // 5. Đăng nhập thành công!
-    // Lưu ý: Cần định nghĩa hàm 'generateToken'
-    return res.status(200).json({
-      message: "Đăng nhập thành công!",
-      user: user,
-      token: generateToken(user._id),
-    });
   } catch (e) {
-    // Sửa: Thay 'error' bằng 'e'
     console.error("Error Function Login : ", e);
     return res.status(500).json({ message: "Đã xảy ra lỗi hệ thống" });
   }
 };
 
-// CRUD
+// --- CRUD: GET ALL ---
 export const getAllUsersController = async (req, res) => {
   try {
-    const user = await User.find({});
+    const users = await User.find({}).select("-password");
     res.status(200).json({
       message: "Lấy danh sách người dùng thành công !",
-      user: user,
-      count: user.length,
+      user: users,
+      count: users.length,
     });
   } catch (error) {
     console.log("Error Function GetAllUsers : ", error);
@@ -137,15 +124,20 @@ export const getAllUsersController = async (req, res) => {
   }
 };
 
+// --- CRUD: GET BY ID ---
 export const getByIdUserController = async (req, res) => {
   try {
-    // 1 . check xem người dùng đã tồn tại chưa
-    const user = await User.findOne({ _id: req.params.id });
+    // 1. check xem id người dùng có hợp lệ không ?
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "ID nguời dùng không hợp lệ" });
+    }
+    // 2 . check xem người dùng đã tồn tại chưa
+    const user = await User.findOne({ _id: req.params.id }).select("-password");
     if (!user) {
-      res.status(404).json({ message: ` Không tồn tại trong CSDL` });
+      return res.status(404).json({ message: ` Không tồn tại trong CSDL` });
     }
     res.status(200).json({
-      message: `Lấy người dùng với _id ${user._id}  thành công !`,
+      message: `Lấy người dùng thành công !`,
       user: user,
     });
   } catch (error) {
@@ -154,14 +146,15 @@ export const getByIdUserController = async (req, res) => {
   }
 };
 
+// --- CRUD: UPDATE ---
 export const updateUserController = async (req, res) => {
   // 1. lấy ID và URL Parameters và dữ liệu cập nhật từ body
   const { id } = req.params;
-  const updateData = req.body;
+  const { fullname, email, username } = req.body;
 
   // 2. Check Xem có dữ liệu nào được cập nhật hay không ?
 
-  if (Object.keys(updateData).length === 0) {
+  if (!fullname && !email && !username) {
     return res
       .status(400)
       .json({ message: "Không có dữ liệu nào cung cấp để cập nhật !" });
@@ -172,10 +165,17 @@ export const updateUserController = async (req, res) => {
       return res.status(400).json({ message: "ID nguời dùng không hợp lệ" });
     }
 
+    // 4 Giới hạn những dữ liệu người dùng có thể update
+    const updateData = { fullname, email, username };
+    // Xóa những trường không gửi nên => undefined
+    Object.keys(updateData).forEach(
+      (key) => updateData[key] === undefined && delete updateData[key]
+    );
+
     const updatedUser = await User.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
-    });
+    }).select("-password");
 
     //  4. Kiểm tra sự tồn tại của người dùng
 
@@ -191,7 +191,7 @@ export const updateUserController = async (req, res) => {
       user: updatedUser,
     });
   } catch (e) {
-    if (error.name === "ValidationError") {
+    if (e.name === "ValidationError") {
       return res
         .status(400)
         .json({ message: "Dữ liệu cập nhật không hợp lệ", error: e.message });
@@ -201,35 +201,32 @@ export const updateUserController = async (req, res) => {
   }
 };
 
-// 4. DELETE (Xóa sản phẩm theo ID)
+// --- CRUD: DELETE ---
 export const deleteUserController = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "ID không hợp lệ" });
+    }
     const deletedUser = await User.findByIdAndDelete(req.params.id);
     if (!deletedUser) {
       return res
         .status(404)
         .json({ message: "Không tìm thấy người dùng để xóa " });
     }
-    res
-      .status(200)
-      .json({ message: "Xoá sản phẩm thành công ", user: deletedUser });
+    res.status(200).json({ message: "Xoá sản phẩm thành công " });
   } catch (error) {
     res.status(500).json({
-      message: "Lỗi sản phẩm",
+      message: "Lỗi hệ thống",
       error: `Lỗi function deleteUserController ${error.message}`,
     });
   }
 };
 
+// --- LOGOUT ---
 export const logoutUserController = async (req, res) => {
   try {
-    res.cookie("jwt", "", {
-      httpOnly: true,
-      expires: new Date(0),
-    });
-
     return res.status(200).json({
-      message: "Đăng xuất thành công. Token đã được xóa khỏi Cookie.",
+      message: "Đăng xuất thành công!",
     });
   } catch (error) {
     console.error("Lỗi đăng xuất:", error);
