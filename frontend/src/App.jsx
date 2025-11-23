@@ -1,26 +1,32 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-// Import Layout
-import MainLayout from "./layouts/MainLayout";
-import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
-const HomePage = React.lazy(() => import("./pages/Home/HomePage"));
-// Import Component
+import React, { useEffect } from "react";
+import { Provider, useDispatch } from "react-redux";
+import { setCredentials, setLoadingFlase } from "./features/auth/authSlice.js";
+import { getUserProfile } from "./api/userAPI.js";
+import { storeRedux } from "./app/store";
 
+const AppContent = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const user = await getUserProfile();
+        if (user) {
+          dispatch(setCredentials({ user }));
+        }
+      } catch (err) {
+        console.log("Chưa đăng nhập hoặc phiên hết hạn : ", err);
+      } finally {
+        dispatch(setLoadingFlase());
+      }
+    };
+    checkAuth();
+  }, [dispatch]);
+};
 const App = () => {
   return (
-    <BrowserRouter>
-      {/* 1.Hiển thị giao diện dự phòng khi Component render */}
-      <React.Suspense
-        fallback={<div className="loading-spinner">Đang tải trang ...</div>}
-      >
-        {/* 2. Routes sử dụng layout MainLayout */}
-        <Routes element={<MainLayout />}>
-          <Route path="/" element={<HomePage />}></Route>
-        </Routes>
-        {/* 3.Route độc lập hiển thị giao diện 404  */}
-        <Route path="*" element={NotFoundPage}></Route>
-      </React.Suspense>
-    </BrowserRouter>
+    <Provider store={storeRedux}>
+      <AppContent />
+    </Provider>
   );
 };
 

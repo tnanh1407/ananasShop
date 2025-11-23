@@ -39,6 +39,8 @@ const usersSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       trim: true,
+      sparse: true,
+      // cho phép null nhưng không được trùng
     },
     address: {
       type: String,
