@@ -5,10 +5,10 @@ const LoginPage = () => {
     <>
       <div className="">
         <div>
-          <img src="../../assets/ananas_logo.svg" />
+          <img src="../../assets/ananas_logo.svg" alt="logo_ananas" />
         </div>
       </div>
-      <div></div>
+      <div>Đây là trang login</div>
     </>
   );
 };
