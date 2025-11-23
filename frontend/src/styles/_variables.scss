@@ -8,6 +8,7 @@ $bp-wide: 1440px;
 // Nền và chữ
   --color-text-primary: #000000;         // Đen
   --color-text-secondary: #555555;       // Xám đậm cho mô tả
+  --color-text-tertiary :#ffffff ;
   --color-background-primary: #ffffff;   // Trắng (Nền trang)
   --color-background-secondary: #f4f4f4; // Xám nhạt (Nền khối/card)
   
@@ -22,6 +23,7 @@ $bp-wide: 1440px;
 // Nền và chữ đảo ngược
   --color-text-primary: #ffffff;
   --color-text-secondary: #aaaaaa;
+  --color-text-tertiary :#000000 ;
   --color-background-primary: #181818; // Nền đen sâu
   --color-background-secondary: #252525; // Nền các khối/card
   
@@ -34,8 +36,11 @@ $bp-wide: 1440px;
 // SCSS Variables: Dùng để tham chiếu đến CSS Variables
 // Các biến này được dùng trong các file SCSS component
 $text-primary: var(--color-text-primary);
+$text-second : var(--color-text-secondary);
+$text-tertiary : var(--color-text-tertiary);
 $bg-primary: var(--color-background-primary);
 $bg-secondary: var(--color-background-secondary);
+$bg-login : #F0F0F0;
 $accent: var(--color-accent);
 $accent-hover: var(--color-accent-hover);
 $border: var(--color-border);

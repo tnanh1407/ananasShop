@@ -4,25 +4,46 @@
 // ==========================================================
 
 @mixin mobile{
-    @media (min-width :v.$bp-mobile) {
+    @media (max-width :v.$bp-mobile) {
         @content ;
     }
 }
 
 @mixin tablet{
-    @media (min-width :v.$bp-tablet) {
+    @media (max-width :v.$bp-tablet) {
         @content ;
     }
 }
 
-@mixin bp-wide{
-    @media (min-width :v.$bp-desktop) {
+@mixin desktop{
+    @media (max-width :v.$bp-desktop) {
         @content ;
     }
 }
 
-@mixin tablet{
-    @media (min-width :v.$bp-wide) {
+@mixin wide {
+    @media (max-width :v.$bp-wide) {
         @content ;
+    }
+}
+
+
+// Định nghĩa button
+
+@mixin button-style($bg-color : v.$accent , $text-color : v.$text-tertiary, $bg-hover : v.$accent-hover){
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    border: none;
+    background-color: $bg-color;
+    font-size: 1.6rem;
+    color: $text-color;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3 ease;
+
+    &:hover{
+        background-color: $bg-hover;
     }
 }
