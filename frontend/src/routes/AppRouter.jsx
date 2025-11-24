@@ -21,6 +21,10 @@ const RegisterPage = React.lazy(() =>
   import("../pages/RegisterPage/RegisterPage")
 );
 
+const ForgotPage = React.lazy(() =>
+  import("../pages/ForgotPage/ForgotPage.jsx")
+);
+
 // Component bảo vệ các router (Protected Route)
 
 const ProtectedRoute = () => {
@@ -65,6 +69,7 @@ const AppRouter = () => {
           <Route path="/notFoundPage" element={<NotFoundPage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/register" element={<RegisterPage />}></Route>
+          <Route path="/forgot" element={<ForgotPage />}></Route>
         </Routes>
       </React.Suspense>
     </BrowserRouter>

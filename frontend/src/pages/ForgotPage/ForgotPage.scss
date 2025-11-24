@@ -2,7 +2,7 @@
 @use "../../styles/variables.scss" as v;
 @use "../../styles/mixins.scss" as m;
 
-.login-page{
+.forgot-page{
     position: relative;
     display: flex;
     background-color: v.$bg-login;
@@ -69,10 +69,11 @@
     }
 
     &__remember{
-        display: flex;
-        align-items: center;
         font-size: 1.4rem;
         opacity: 0.7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     &__remember input {
         margin-right: 10px;
@@ -103,8 +104,8 @@
         @include m.button-style;
         background-color: v.$text-second;
         font-size: 1.4rem;
-        text-align: center;
         text-decoration: none;
+        text-align: center;
 
         &:hover{
             background-color: v.$text-second;
