@@ -29,6 +29,7 @@ const AppContent = () => {
 const App = () => {
   return (
     <Provider store={storeRedux}>
+      <Toaster position="top-right" richColors />
       <AppContent />
     </Provider>
   );

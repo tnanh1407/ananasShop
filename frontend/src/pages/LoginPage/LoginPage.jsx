@@ -1,7 +1,7 @@
 import "./LoginPage.scss";
 import LogoAnanas from "@/assets/ananas_logo.svg";
 import backgroundAnanas from "@/assets/ananas_background.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -15,10 +15,24 @@ const LoginPage = () => {
     accountIdentifier: "",
     password: "",
   });
+
+  const [isRemember, setIsRemember] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedAccount = localStorage.getItem("savedAccountIndentifier");
+    if (savedAccount) {
+      setFormData((prev) => ({
+        ...prev,
+        accountIdentifier: savedAccount,
+      }));
+      setIsRemember(true);
+    }
+  }, []);
+
   const handleToogglePassword = () => {
     setShowPassword(!showPassword);
   };
@@ -38,15 +52,30 @@ const LoginPage = () => {
 
     console.log("🔵 Bắt đầu đăng nhập với dữ liệu:", formData);
 
-    // Validatte đơn giản
-    if (!formData.accountIdentifier || !formData.password) {
-      toast.error("Vui lòng nhập đầy đủ thông tin !");
+    if (isRemember) {
+      localStorage.getItem("savedAccountIndentifier", identifier);
+    } else {
+      localStorage.removeItem("savedAccountIndentifier");
+    }
+    const identifier = formData.accountIdentifier.trim();
+    const pass = formData.password.trim();
+
+    // 2. Kiểm tra rỗng
+    if (!identifier || !pass) {
+      toast.error("Vui lòng nhập đầy đủ tài khoản và mật khẩu!");
+      return;
+    }
+
+    // 3. Kiểm tra độ dài mật khẩu (Backend quy định min 6 ký tự)
+    if (pass.length < 6) {
+      toast.error("Mật khẩu phải có ít nhất 6 ký tự!");
       return;
     }
 
     setIsLoading(true);
     try {
       // Gọi API
+      await new Promise((resolve) => setTimeout(resolve, 20000));
       const data = await loginUser(formData);
 
       console.log("🟢 Đăng nhập thành công, Server trả về:", data);
@@ -102,7 +131,13 @@ const LoginPage = () => {
           </div>
           <div className="login-page__actions">
             <div className="login-page__remember">
-              <input type="checkbox" /> <span>Ghi nhớ tài khoản</span>
+              <input
+                type="checkbox"
+                id="remember-me"
+                checked={isRemember}
+                onChange={(e) => e.setIsRemember(e.target.checked)}
+              />{" "}
+              <label htmlFor="remember-me">Ghi nhớ tài khoản</label>
             </div>
             <Link to="/forgot" className="login-page__forgot">
               Quên mật khẩu
