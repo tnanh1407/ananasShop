@@ -4,6 +4,7 @@ import { setCredentials, setLoadingFlase } from "./features/auth/authSlice.jsx";
 import { getUserProfile } from "./api/userAPI.js";
 import { storeRedux } from "./app/store";
 import AppRouter from "./routes/AppRouter.jsx";
+import { Toaster } from "sonner";
 
 const AppContent = () => {
   const dispatch = useDispatch();

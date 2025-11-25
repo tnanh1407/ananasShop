@@ -3,16 +3,70 @@ import LogoAnanas from "@/assets/ananas_logo.svg";
 import backgroundAnanas from "@/assets/ananas_background.png";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { toast } from "sonner";
+import { loginUser } from "../../api/userAPI";
+import { setCredentials } from "../../features/auth/authSlice";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    accountIdentifier: "",
+    password: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleToogglePassword = () => {
     setShowPassword(!showPassword);
   };
+
+  // 2. Hàm xử lí input
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  // 3 Hàm xử lí submit  form
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    // Ngăn Reload trang
+
+    console.log("🔵 Bắt đầu đăng nhập với dữ liệu:", formData);
+
+    // Validatte đơn giản
+    if (!formData.accountIdentifier || !formData.password) {
+      toast.error("Vui lòng nhập đầy đủ thông tin !");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Gọi API
+      const data = await loginUser(formData);
+
+      console.log("🟢 Đăng nhập thành công, Server trả về:", data);
+      // Dispatch action lưu user vào Redux Strore
+      //  Backend trả về token , message , user
+      dispatch(setCredentials({ user: data.user }));
+      toast.success("Đăng nhập thành công !");
+      //  Chuyển hướng về homePage
+      navigate("/");
+    } catch (e) {
+      console.error("🔴 Lỗi đăng nhập:", e);
+      // Lấy lỗi từ message từ error object
+      const errorMessage = e.errorMessage || "Đăng nhập thất bại";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
-    <div class="login-page">
+    <div className="login-page">
       <div className="login-page__content">
         <div className="login-page__header">
           <div className="login-page__logo">
@@ -21,13 +75,22 @@ const LoginPage = () => {
           <span className="login-page__title"> | ERP SYSTEM</span>
         </div>
 
-        <form className="login-page__form">
+        <form className="login-page__form" onSubmit={handleLogin}>
           <div className="login-page__input-group">
-            <input placeholder="Địa chỉ email" type="text" />
+            <input
+              name="accountIdentifier"
+              placeholder="Nhập địa chỉ email hoặc tên đăng nhập"
+              type="text"
+              value={formData.accountIdentifier}
+              onChange={handleChange}
+            />
           </div>
           <div className="login-page__input-group login-page__password-group">
             <input
-              placeholder="Mật khẩu"
+              onChange={handleChange}
+              name="password"
+              value={formData.password}
+              placeholder="Nhập mật khẩu của bạn"
               type={showPassword ? "text" : "password"}
             />
             <span
@@ -41,12 +104,20 @@ const LoginPage = () => {
             <div className="login-page__remember">
               <input type="checkbox" /> <span>Ghi nhớ tài khoản</span>
             </div>
-            <span className="login-page__forgot">
-              <a href="#">Quên mật khẩu</a>
-            </span>
+            <Link to="/forgot" className="login-page__forgot">
+              Quên mật khẩu
+            </Link>
           </div>
-          <button className="login-page__btn-submit" type="submit">
-            Đăng nhập
+          <button
+            className="login-page__btn-submit"
+            type="submit"
+            disabled={isLoading}
+            style={{
+              opacity: isLoading ? 0.7 : 1,
+              cursor: isLoading ? "not-allowed" : "pointer",
+            }}
+          >
+            {isLoading ? "Đang xử lý..." : "Đăng nhập"}
           </button>
           <Link to="/register" className="login-page__btn-register">
             Đăng kí

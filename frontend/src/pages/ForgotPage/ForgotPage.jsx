@@ -1,7 +1,6 @@
 import "./ForgotPage.scss";
 import LogoAnanas from "@/assets/ananas_logo.svg";
 import backgroundAnanas from "@/assets/ananas_background.png";
-import { Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ForgotPage = () => {
@@ -20,9 +19,9 @@ const ForgotPage = () => {
             <input placeholder="Địa chỉ email" type="text" />
           </div>
           <button className="forgot-page__btn-submit" type="submit">
-            Đăng nhập
+            Xác nhận Mail
           </button>
-          <Link to="/login" className="forgot-page__btn-forgot">
+          <Link to="/login" className="forgot-page__btn-register">
             Chuyển sang đăng nhập
           </Link>
         </form>

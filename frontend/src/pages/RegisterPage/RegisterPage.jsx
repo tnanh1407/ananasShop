@@ -66,7 +66,7 @@ const RegisterPage = () => {
             </span> */}
           </div>
           <button className="register-page__btn-submit" type="submit">
-            Đăng nhập
+            Đăng kí
           </button>
           <Link to="/login" className="register-page__btn-register">
             Chuyển sang đăng nhập

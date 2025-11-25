@@ -10,10 +10,7 @@ const generateToken = (id) => {
 };
 
 // --- FUNCTION REGISTER ---
-// --- FUNCTION REGISTER ---
 export const registerUserController = async (req, res) => {
-  const { fullname, password, username } = req.body;
-  const email = req.body.email ? req.body.email.toLowerCase() : null;
   const { fullname, password, username } = req.body;
   const email = req.body.email ? req.body.email.toLowerCase() : null;
 
@@ -28,11 +25,9 @@ export const registerUserController = async (req, res) => {
     // 2. Kiểm tra xem người dùng đã tồn tại chưa
     const userExists = await User.findOne({
       $or: [{ email: email }, { username: username }],
-      $or: [{ email: email }, { username: username }],
     });
 
     if (userExists) {
-      if (userExists.email === email) {
       if (userExists.email === email) {
         return res.status(400).json({ message: "Email đã được đăng ký." });
       }
@@ -46,7 +41,6 @@ export const registerUserController = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // 4 Tạo người dùng mới
-
     const user = await User.create({
       fullname,
       email,
@@ -58,8 +52,8 @@ export const registerUserController = async (req, res) => {
       const token = generateToken(user._id);
       res.cookie("jwt", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== "development", // Tự động tắt bảo mật HTTPS khi chạy ở máy local để không bị lỗi,
-        sameSite: "strict", // Chống trang web khác mượn danh tính người dùng để gửi lệnh bậy bạ.
+        secure: process.env.NODE_ENV !== "development", // Tự động tắt bảo mật HTTPS khi chạy ở máy local để không bị lỗi
+        sameSite: "strict", // Chống trang web khác mượn danh tính người dùng
         maxAge: 30 * 24 * 60 * 60 * 1000,
       });
 
@@ -80,7 +74,6 @@ export const registerUserController = async (req, res) => {
 };
 
 // --- FUNCTION LOGIN ---
-// --- FUNCTION LOGIN ---
 export const loginUserController = async (req, res) => {
   const { accountIdentifier, password } = req.body;
 
@@ -92,7 +85,7 @@ export const loginUserController = async (req, res) => {
   }
 
   try {
-    // 2. Định nghĩa các điều kiện tìm kiếm, truy vấn với phần tử $or
+    // 2. Định nghĩa các điều kiện tìm kiếm
     const findConditions = [
       // Email luôn chuyển sang chữ thường để đảm bảo tìm kiếm không phân biệt hoa/thường
       { email: accountIdentifier.toLowerCase() },
@@ -107,7 +100,7 @@ export const loginUserController = async (req, res) => {
 
       const token = generateToken(user._id);
       res.cookie("jwt", token, {
-        httpOnly: true, // JS phía client không đọc được
+        httpOnly: true,
         secure: process.env.NODE_ENV !== "development",
         sameSite: "strict",
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 ngày
@@ -121,8 +114,7 @@ export const loginUserController = async (req, res) => {
     } else {
       return res.status(401).json({
         message:
-          "Thông tin đăng nhập không hợp lệ (Tài khoản hoặc Mật khẩu sai) ",
-          "Thông tin đăng nhập không hợp lệ (Tài khoản hoặc Mật khẩu sai) ",
+          "Thông tin đăng nhập không hợp lệ (Tài khoản hoặc Mật khẩu sai)",
       });
     }
   } catch (e) {
@@ -132,15 +124,11 @@ export const loginUserController = async (req, res) => {
 };
 
 // --- CRUD: GET ALL ---
-// --- CRUD: GET ALL ---
 export const getAllUsersController = async (req, res) => {
   try {
     const users = await User.find({}).select("-password");
-    const users = await User.find({}).select("-password");
     res.status(200).json({
       message: "Lấy danh sách người dùng thành công !",
-      user: users,
-      count: users.length,
       user: users,
       count: users.length,
     });
@@ -151,7 +139,6 @@ export const getAllUsersController = async (req, res) => {
 };
 
 // --- CRUD: GET BY ID ---
-// --- CRUD: GET BY ID ---
 export const getByIdUserController = async (req, res) => {
   try {
     // 1. check xem id người dùng có hợp lệ không ?
@@ -160,18 +147,10 @@ export const getByIdUserController = async (req, res) => {
     }
     // 2 . check xem người dùng đã tồn tại chưa
     const user = await User.findOne({ _id: req.params.id }).select("-password");
-    // 1. check xem id người dùng có hợp lệ không ?
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ message: "ID nguời dùng không hợp lệ" });
-    }
-    // 2 . check xem người dùng đã tồn tại chưa
-    const user = await User.findOne({ _id: req.params.id }).select("-password");
     if (!user) {
-      return res.status(404).json({ message: ` Không tồn tại trong CSDL` });
-      return res.status(404).json({ message: ` Không tồn tại trong CSDL` });
+      return res.status(404).json({ message: `Không tồn tại trong CSDL` });
     }
     res.status(200).json({
-      message: `Lấy người dùng thành công !`,
       message: `Lấy người dùng thành công !`,
       user: user,
     });
@@ -182,33 +161,22 @@ export const getByIdUserController = async (req, res) => {
 };
 
 // --- CRUD: UPDATE ---
-// --- CRUD: UPDATE ---
 export const updateUserController = async (req, res) => {
   // 1. lấy ID và URL Parameters và dữ liệu cập nhật từ body
   const { id } = req.params;
   const { fullname, email, username } = req.body;
-  const { fullname, email, username } = req.body;
 
   // 2. Check Xem có dữ liệu nào được cập nhật hay không ?
-
-  if (!fullname && !email && !username) {
   if (!fullname && !email && !username) {
     return res
       .status(400)
       .json({ message: "Không có dữ liệu nào cung cấp để cập nhật !" });
   }
   try {
-    // 3. Kiểm tra xem dữ liệu id có hợp  lệ hay không ?
+    // 3. Kiểm tra xem dữ liệu id có hợp lệ hay không ?
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "ID nguời dùng không hợp lệ" });
     }
-
-    // 4 Giới hạn những dữ liệu người dùng có thể update
-    const updateData = { fullname, email, username };
-    // Xóa những trường không gửi nên => undefined
-    Object.keys(updateData).forEach(
-      (key) => updateData[key] === undefined && delete updateData[key]
-    );
 
     // 4 Giới hạn những dữ liệu người dùng có thể update
     const updateData = { fullname, email, username };
@@ -221,10 +189,8 @@ export const updateUserController = async (req, res) => {
       new: true,
       runValidators: true,
     }).select("-password");
-    }).select("-password");
 
-    //  4. Kiểm tra sự tồn tại của người dùng
-
+    // 4. Kiểm tra sự tồn tại của người dùng
     if (!updatedUser) {
       return res
         .status(404)
@@ -238,7 +204,6 @@ export const updateUserController = async (req, res) => {
     });
   } catch (e) {
     if (e.name === "ValidationError") {
-    if (e.name === "ValidationError") {
       return res
         .status(400)
         .json({ message: "Dữ liệu cập nhật không hợp lệ", error: e.message });
@@ -249,12 +214,8 @@ export const updateUserController = async (req, res) => {
 };
 
 // --- CRUD: DELETE ---
-// --- CRUD: DELETE ---
 export const deleteUserController = async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ message: "ID không hợp lệ" });
-    }
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ message: "ID không hợp lệ" });
     }
@@ -265,17 +226,14 @@ export const deleteUserController = async (req, res) => {
         .json({ message: "Không tìm thấy người dùng để xóa " });
     }
     res.status(200).json({ message: "Xoá sản phẩm thành công " });
-    res.status(200).json({ message: "Xoá sản phẩm thành công " });
   } catch (error) {
     res.status(500).json({
-      message: "Lỗi hệ thống",
       message: "Lỗi hệ thống",
       error: `Lỗi function deleteUserController ${error.message}`,
     });
   }
 };
 
-// --- LOGOUT ---
 // --- LOGOUT ---
 export const logoutUserController = async (req, res) => {
   try {
@@ -286,7 +244,6 @@ export const logoutUserController = async (req, res) => {
 
     return res.status(200).json({
       message: "Đăng xuất thành công!",
-      message: "Đăng xuất thành công!",
     });
   } catch (error) {
     console.error("Lỗi đăng xuất:", error);
@@ -296,7 +253,7 @@ export const logoutUserController = async (req, res) => {
   }
 };
 
-// --- GET USER PROFILE (Dùng cho F5/Refresh trang) ---
+// --- GET USER PROFILE ---
 export const getProfileUserController = async (req, res) => {
   try {
     const user = req.user;
