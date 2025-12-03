@@ -28,8 +28,8 @@
 }
 
 
-// Định nghĩa button
 
+// Định nghĩa button
 @mixin button-style($bg-color : v.$accent , $text-color : v.$text-tertiary, $bg-hover : v.$accent-hover){
     display: inline-block;
     justify-content: center;

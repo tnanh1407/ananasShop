@@ -5,42 +5,32 @@ $bp-desktop: 1024px;
 $bp-wide: 1440px;
 
 :root {
-// Nền và chữ
-  --color-text-primary: #000000;         // Đen
-  --color-text-secondary: #555555;       // Xám đậm cho mô tả
-  --color-text-tertiary :#ffffff ;
-  --color-background-primary: #ffffff;   // Trắng (Nền trang)
-  --color-background-secondary: #f4f4f4; // Xám nhạt (Nền khối/card)
-  
+  // Nền và chữ
+  --color-text-primary: #000000;
+  --color-text-secondary: #ffffff;
+  --color-background-tertiary: #CCCCCC;
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #4C4C4C;
+  --color-background-tertiary: #000000;
   // Màu nhấn (Thương hiệu)
-  --color-accent: #f15e2c;               // Cam (Nút Mua Hàng, Giảm giá)
-  --color-accent-hover: #e04a18;         // Cam đậm hơn khi hover
-  --color-border: #e0e0e0;
+  --color-accent: #f15e2c; // Cam (Nút Mua Hàng, Giảm giá)
+  --color-accent-hover: #e04a18; // Cam đậm hơn khi hover
+  --color-carousel: #F1F1F1;
 }
 
 // Định nghĩa các CSS Variables cho Dark Mode
-[data-theme='dark'] {
-// Nền và chữ đảo ngược
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #aaaaaa;
-  --color-text-tertiary :#000000 ;
-  --color-background-primary: #181818; // Nền đen sâu
-  --color-background-secondary: #252525; // Nền các khối/card
-  
-  // Màu nhấn vẫn giữ (đảm bảo thương hiệu)
-  --color-accent: #f15e2c;               
-  --color-accent-hover: #ff7f4a;         // Có thể làm sáng hơn một chút để nổi bật
-  --color-border: #444444;
-}
+[data-theme='dark'] {}
 
-// SCSS Variables: Dùng để tham chiếu đến CSS Variables
-// Các biến này được dùng trong các file SCSS component
 $text-primary: var(--color-text-primary);
 $text-second : var(--color-text-secondary);
 $text-tertiary : var(--color-text-tertiary);
 $bg-primary: var(--color-background-primary);
 $bg-secondary: var(--color-background-secondary);
-$bg-login : #F0F0F0;
+$bg-tertiary : var(--color-background-tertiary);
+
 $accent: var(--color-accent);
 $accent-hover: var(--color-accent-hover);
-$border: var(--color-border);
+$carousel : var(--color-carousel);
+
+
+$bg-login : #F0F0F0;
