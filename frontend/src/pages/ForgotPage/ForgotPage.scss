@@ -1,15 +1,13 @@
-
 @use "../../styles/variables.scss" as v;
 @use "../../styles/mixins.scss" as m;
 
-.forgot-page{
+.forgot-page {
     position: relative;
     display: flex;
     background-color: v.$bg-login;
 
 
-    &__content{
-   
+    &__content {
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -18,21 +16,20 @@
         align-items: center;
     }
 
-    &__header{
+    &__header {
         display: flex;
         margin-bottom: 40px;
-        display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    &__logo{
+    &__logo {
         width: 97px;
         height: 21px;
     }
 
-    &__title{
-        font-size: 2.85rem; 
+    &__title {
+        font-size: 1.75rem;
         font-weight: 800;
         opacity: 0.7;
     }
@@ -43,11 +40,11 @@
         gap: 20px;
     }
 
-    &__input-group input{
-        width:  340px;
+    &__input-group input {
+        width: 340px;
         height: 40px;
-        margin-bottom: 2px ;
-        padding: 10px 20px 8px ;
+        margin-bottom: 2px;
+        padding: 10px 20px 8px;
         background-color: v.$bg-primary ;
         border: none;
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -57,87 +54,92 @@
         position: relative;
     }
 
-    &__toggle-icon{
+    &__toggle-icon {
         position: absolute;
         right: 10px;
         top: 8px;
     }
 
     &__actions {
-        display: flex ;
+        display: flex;
         justify-content: space-between;
     }
 
-    &__remember{
-        font-size: 1.4rem;
+    &__remember {
+        font-size: 0.875rem;
         opacity: 0.7;
         display: flex;
         justify-content: center;
         align-items: center;
     }
+
     &__remember input {
         margin-right: 10px;
         box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     }
 
-    &__forgot a{
-        text-decoration: none ;
-        color: black ;
-        opacity: 0.7 ;
+    &__forgot a {
+        text-decoration: none;
+        color: black;
+        opacity: 0.7;
         font-size: 1.4rem;
-        &:hover{
+
+        &:hover {
             color: v.$accent;
         }
     }
 
-    &__banner{
+    &__banner {
         width: 700px;
         height: 100vh;
-        overflow: hidden ;
-    }
-    &__btn-submit{
-        @include m.button-style;
-        font-size: 1.4rem;
+        overflow: hidden;
     }
 
-    &__btn-register{
+    &__btn-submit {
+        @include m.button-style;
+        font-size: 0.875rem;
+        color: v.$text-second;
+    }
+
+    &__btn-register {
         @include m.button-style;
         background-color: v.$text-second;
-        font-size: 1.4rem;
+        font-size: 0.875rem;
         text-decoration: none;
         text-align: center;
 
-        &:hover{
+        &:hover {
             background-color: v.$text-second;
             filter: brightness(0.8);
-            
+
         }
     }
 
 
-    &__coppy-right{
+    &__coppy-right {
         position: absolute;
         bottom: 0;
         margin-bottom: 20px;
         opacity: 0.7;
-        font-size: 1.4rem;
+        font-size: 0.875rem;
     }
 
 
 
-    @include m.tablet{
+    @include m.tablet {
         .login-page {
             position: relative;
         }
 
-        &__content{
+        &__content {
             height: 100vh;
-            width: 100%;       // Form to ra
+            width: 100%;
             background-color: rgba(221, 213, 213, 0.9); // Nền mờ
             border-radius: 8px;
             z-index: 2;
         }
-        &__banner{
+
+        &__banner {
             position: absolute; // Phủ kín màn hình
             width: 100%;
             height: 100%;

@@ -1,0 +1,42 @@
+@use "../../styles/variables.scss" as v;
+@use "../../styles/mixins.scss" as m;
+
+.footer {
+    background-color: v.$bg-secondary;
+    display: flex;
+    padding: 40px 10px;
+
+    &__items {
+        width: 20%;
+    }
+
+    &__items__title {
+        margin-top: 20px;
+        font-size: 2.6rem;
+        color: white;
+        text-transform: capitalize;
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+
+    &__items p {
+        font-size: 1.6rem;
+        // color: v.$text-menu ;
+        line-height: 3.0rem;
+        cursor: pointer;
+
+        &:hover {
+            color: v.$accent-hover;
+        }
+    }
+
+    &__items__social {
+        display: flex;
+        gap: 20px;
+    }
+
+    &__items__social img {
+        width: 50px;
+        cursor: pointer;
+    }
+}

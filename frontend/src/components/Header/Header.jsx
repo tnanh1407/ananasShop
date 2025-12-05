@@ -7,6 +7,7 @@ import {
   Package,
   Search,
   User,
+  ChevronUp,
 } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -17,19 +18,18 @@ import dropMenu1 from "../../assets/dropMenu1.jpg";
 import dropMenu2 from "../../assets/dropMenu2.jpg";
 import dropMenu3 from "../../assets/dropMenu3.jpg";
 import dropMenu4 from "../../assets/dropMenu4.jpg";
-import { useState } from "react";
+import { useState, useRef } from "react";
 const AnnouncementBar = () => {
   return (
-    // Thêm class 'header__announcement-bar' để styling
     <div className="header__announcement-bar">
       <Swiper
         navigation={true}
-        modules={[Navigation]} // Truyền module Navigation
+        modules={[Navigation, Autoplay]} // Truyền module Navigation
         className="mySwiper header__carousel"
         loop={true} // Lặp vô hạn cho carousel thông báo
         slidesPerView={1}
         autoplay={{
-          delay: 1000, // 10000 milliseconds = 10 giây
+          delay: 3000, // 10000 milliseconds = 10 giây
           disableOnInteraction: false, // Giữ cho slider tự trượt sau khi người dùng tương tác (nhấn nút)
         }}
       >
@@ -46,7 +46,23 @@ const AnnouncementBar = () => {
   );
 };
 const Header = () => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHoveredProduct, setIsHoveredProduct] = useState(false);
+  const [isHoveredMale, setIsHoveredMale] = useState(false);
+  const [isHoveredFemale, setIsHoveredFemale] = useState(false);
+  const timeoutRef = useRef(null);
+
+  const handleMouseEnter = (callback) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    callback(true);
+  };
+
+  const handleMouseLeave = (callback) => {
+    timeoutRef.current = setTimeout(() => {
+      callback(false);
+    }, 200); // 200ms là độ trễ
+  };
   return (
     <header className="header">
       <div className="header__utinity">
@@ -76,31 +92,38 @@ const Header = () => {
           <img src={LogoAnanas} alt="logo_ananas"></img>
         </div>
         <div className="header__category">
-          <div className="header__category__items">
+          <div
+            className="header__category__items"
+            onMouseEnter={() => handleMouseEnter(setIsHoveredProduct)}
+            onMouseLeave={() => handleMouseLeave(setIsHoveredProduct)}
+          >
             <span>Sản phẩm</span>
-            <ChevronDown />
+            {isHoveredProduct ? <ChevronUp /> : <ChevronDown />}
           </div>
 
           <div className="header__line"></div>
 
           <div
             className="header__category__items"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={() => handleMouseEnter(setIsHoveredMale)}
+            onMouseLeave={() => handleMouseLeave(setIsHoveredMale)}
           >
             <span>Nam</span>
-            <ChevronDown />
+            {isHoveredMale ? <ChevronUp /> : <ChevronDown />}
           </div>
 
           <div className="header__line"></div>
-          <div className="header__category__items">
+          <div
+            className="header__category__items"
+            onMouseEnter={() => handleMouseEnter(setIsHoveredFemale)}
+            onMouseLeave={() => handleMouseLeave(setIsHoveredFemale)}
+          >
             <span>Nữ</span>
-            <ChevronDown />
+            {isHoveredFemale ? <ChevronUp /> : <ChevronDown />}
           </div>
           <div className="header__line"></div>
           <div className="header__category__items">
             <span>Sale off</span>
-            <ChevronDown />
           </div>
           <div className="header__line"></div>
           <div className="header__category__items">
@@ -114,8 +137,12 @@ const Header = () => {
         </div>
       </div>
       <AnnouncementBar />
-      {isHovered && (
-        <div className="header__showCategory">
+      {isHoveredProduct && (
+        <div
+          className="header__showCategory"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <div className="header__list">
             <div className="header__list__items">
               <img src={dropMenu1} alt="drop__menu_1" />
@@ -140,6 +167,60 @@ const Header = () => {
           <p className="header__title__hover">
             MỌI NGƯỜI THƯỜNG GỌI CHÚNG TÔI LÀ{" "}
             <span style={{ color: "white" }}>DỨA</span> !
+          </p>
+        </div>
+      )}
+      {(isHoveredFemale || isHoveredMale) && (
+        <div className="header__showMaleAndFemale">
+          <div className="header__content">
+            <div className="header__outstanding header__content__items">
+              <h2>Nổi bật</h2>
+              <p>Best saller</p>
+              <p>New Arrival</p>
+              <p>Sale off</p>
+
+              <h3>Bộ sưu tập</h3>
+              <p>Recycled Material</p>
+              <p>Day slide</p>
+              <p>Denim</p>
+              <p>Track 6 OG</p>
+              <p>Pattas Polka Dots</p>
+
+              <h3>Collaboration</h3>
+            </div>
+            <div className="header__shoes header__content__items">
+              <h2>Giày</h2>
+              <h3>Dòng sản phẩm</h3>
+              <p>Batas</p>
+              <p>Vintas</p>
+              <p>Urbas</p>
+              <p>Creas</p>
+              <p>Track 6</p>
+              <h3>Style</h3>
+              <p>High Top</p>
+              <p>Low Top</p>
+              <p>Slip-on</p>
+              <h3>Tất cả giày</h3>
+            </div>
+            <div className="header__fashionAndAccessory header__content__items">
+              <h2>Thời trang & phụ kiện</h2>
+              <h3>Nửa trên</h3>
+              <p>Basic Tee</p>
+              <p>Graphic Tee</p>
+              <p>Sweatshirt</p>
+              <p>Hoodie</p>
+
+              <h3>Phụ kiện</h3>
+              <p>Nón</p>
+              <p>Dây giày</p>
+              <p>Vớ</p>
+              <p>Túi Tote</p>
+              <h3>Xem tất cả</h3>
+            </div>
+          </div>
+          <p className="header__title__hover">
+            Mọi người thường gọi chúng tôi là{" "}
+            <span style={{ color: "white" }}>DỨA</span> !{" "}
           </p>
         </div>
       )}

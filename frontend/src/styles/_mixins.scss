@@ -1,49 +1,44 @@
-@use "./variables.scss" as v ;
+@use "./variables.scss" as v;
 // ==========================================================
 // BREAKPOINT MIXINS (Sử dụng Mobile-First)
 // ==========================================================
 
-@mixin mobile{
-    @media (max-width :v.$bp-mobile) {
+@mixin mobile {
+    @media (max-width : 576px) {
         @content ;
     }
 }
 
-@mixin tablet{
-    @media (max-width :v.$bp-tablet) {
+@mixin tablet {
+    @media (max-width : 768px) {
         @content ;
     }
 }
 
-@mixin desktop{
-    @media (max-width :v.$bp-desktop) {
+@mixin desktop {
+    @media (max-width : 1024px) {
         @content ;
     }
 }
 
-@mixin wide {
-    @media (max-width :v.$bp-wide) {
-        @content ;
-    }
-}
 
 
 
 // Định nghĩa button
-@mixin button-style($bg-color : v.$accent , $text-color : v.$text-tertiary, $bg-hover : v.$accent-hover){
+@mixin button-style($bg-color : v.$accent , $text-color : v.$text-tertiary, $bg-hover : v.$accent-hover) {
     display: inline-block;
     justify-content: center;
     align-items: center;
     padding: 10px 20px;
     border: none;
     background-color: $bg-color;
-    font-size: 1.6rem;
+    font-size: 1rem;
     color: $text-color;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3 ease;
 
-    &:hover{
+    &:hover {
         background-color: $bg-hover;
     }
 }

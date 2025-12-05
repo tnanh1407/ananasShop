@@ -1,13 +1,13 @@
 $font-stack: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $bp-mobile: 576px;
-$bp-tablet: 768px;
+$bp-mobile: 768px;
 $bp-desktop: 1024px;
-$bp-wide: 1440px;
 
 :root {
   // Nền và chữ
   --color-text-primary: #000000;
   --color-text-secondary: #ffffff;
+  --color-text-tertiary: #8b8b8b;
   --color-background-tertiary: #CCCCCC;
   --color-background-primary: #ffffff;
   --color-background-secondary: #4C4C4C;
