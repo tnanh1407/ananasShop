@@ -1,42 +1,243 @@
 @use "../../styles/variables.scss" as v;
 @use "../../styles/mixins.scss" as m;
 
-.footer {
-    background-color: v.$bg-secondary;
-    display: flex;
-    padding: 40px 10px;
+.accordion-item {
+    border: none;
+    border-bottom: 1px dashed gray;
+    background-color: #303030;
+}
 
-    &__items {
-        width: 20%;
+.accordion-header {
+    button {
+        background-color: #4C4C4C;
+        box-shadow: none;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: v.$text-second ;
+        padding: 40px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-transform: uppercase;
+
+        transition: color 0.25s ease;
+
+        &:hover {
+            color: var(v.$accent-hover);
+        }
+
+        // icon rotate
+        &:after {
+            transition: transform 0.25s ease;
+        }
+
+        &[aria-expanded="true"] {
+            color: v.$accent-hover;
+            background-color: #4C4C4C;
+
+            &:after {
+                transform: rotate(180deg);
+            }
+        }
     }
+}
 
-    &__items__title {
-        margin-top: 20px;
-        font-size: 2.6rem;
-        color: white;
-        text-transform: capitalize;
-        margin-bottom: 20px;
-        cursor: pointer;
-    }
+.accordion-body {
+    padding: 20px;
+    color: wheat;
 
-    &__items p {
-        font-size: 1.6rem;
-        // color: v.$text-menu ;
-        line-height: 3.0rem;
+    p {
+        font-size: 1.2rem;
+        line-height: 1.5;
+        margin: 6px 0;
         cursor: pointer;
+        transition: color 0.25s ease;
 
         &:hover {
             color: v.$accent-hover;
         }
     }
+}
 
-    &__items__social {
+.footer {
+
+    background-color: v.$bg-secondary;
+    display: flex;
+    // padding: 40px 10px;
+    flex-direction: column;
+
+    &__width__max {
+        display: none;
+    }
+
+    &__title__min {
+        color: v.$text-second;
+        font-size: 1.6rem;
+        padding: 20px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    &__social__min {
         display: flex;
+        padding: 20px;
+        gap: 20px;
+        justify-content: center;
+
+    }
+
+    &__social__min img {
+        width: 50px;
+        height: 50px;
+    }
+
+    &__search__min {
+        padding: 20px;
+        display: flex;
+    }
+
+    &__search__min input {
+        flex: 1;
+    }
+
+    &__search__min img {
+        width: 60px;
+        height: 60px;
+    }
+
+    &__backToHeader__min {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         gap: 20px;
     }
 
-    &__items__social img {
-        width: 50px;
-        cursor: pointer;
+    &__backToHeader__min img {
+        width: 60px;
+        height: 60px;
+    }
+
+    &__backToHeader__min span {
+        font-size: 1.2rem;
+        color: v.$text-second ;
+    }
+
+    &__coppyRight__min {
+        text-align: center;
+        color: v.$text-tertiary;
+        font-size: 1.1rem;
+    }
+
+    &__comfirm__min {
+        padding: 20px;
+        text-align: center;
+    }
+
+    @include m.laptop {
+        .footer__width__min {
+            display: none;
+        }
+
+        &__width__max {
+            display: block;
+        }
+
+        &__main {
+            padding: 60px 0px;
+        }
+
+        &__logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        &__logo img {
+            width: 280px;
+            height: auto;
+        }
+
+        &__found__shop {
+            @include m.button-style(v.$bg-secondary, v.$text-second, v.$accent-hover);
+            background-color: v.$accent;
+            padding: 12px 60px;
+            text-transform: uppercase;
+        }
+
+        &__menu__list__items {
+            margin-bottom: 20px;
+        }
+
+        &__title {
+            font-size: 1.4376rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: v.$text-second;
+            margin-bottom: 10px;
+            padding-bottom: 9px;
+            cursor: pointer;
+        }
+
+        &__menu__list__items p {
+            cursor: pointer;
+            padding-bottom: 3px;
+            font-size: 1rem;
+            color: v.$text-tertiary;
+            line-height: 1rem;
+
+            &:hover {
+                color: v.$accent-hover;
+            }
+        }
+
+
+        &__social__and__search {
+            margin-bottom: 20px;
+        }
+
+        &__social__icon {
+            display: flex;
+            gap: 20px;
+        }
+
+        &__social__icon img {
+            width: 50px;
+            cursor: pointer;
+        }
+
+        &__register__email {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        &__register__email input {
+            height: 40px;
+        }
+
+        &__register__email img {
+            width: 40px;
+            height: 40px;
+        }
+
+        &__confirm {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+        }
+
+        &__confirm img {
+            cursor: pointer;
+        }
+
+        &__copyRight {
+            display: flex;
+            color: v.$text-tertiary;
+            font-size: 1rem;
+            align-items: center;
+        }
     }
 }

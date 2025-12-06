@@ -1,9 +1,31 @@
 @use "../../styles/variables.scss" as v;
 @use "../../styles/mixins.scss" as m;
 
+@mixin dropdown-animation {
+    z-index: 10;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: v.$bg-secondary;
+
+    // Hiệu ứng mượt mà
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease-in-out;
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
 .header {
     position: relative;
 
+    // --- 1. UTILITY BAR ---
     &__utinity {
         background-color: v.$bg-tertiary;
         color: v.$text-second;
@@ -24,16 +46,37 @@
             margin-right: 50px;
         }
 
-        & span:hover {
-            color: v.$accent;
+        & span {
+            display: none;
+
+            &:hover {
+                color: v.$accent;
+            }
+        }
+
+        // Desktop: Hiện lại chữ
+        @include m.desktop {
+            & span {
+                display: inline;
+            }
         }
     }
 
+    // --- 2. MAIN MENU ---
     &__menu {
         display: flex;
         justify-content: space-around;
-        // padding: 10px;
         align-items: center;
+
+        // Mobile: Menu bị vỡ xuống dòng
+        flex-wrap: wrap;
+        margin: 12px 12px 20px;
+
+        // Desktop: Menu nằm ngang thẳng hàng
+        @include m.desktop {
+            flex-wrap: nowrap;
+            margin: 0;
+        }
     }
 
     &__logo img {
@@ -53,9 +96,7 @@
         align-items: center;
         gap: 4px;
         padding: 40px 0px;
-
     }
-
 
     &__category__items span {
         text-transform: capitalize;
@@ -67,8 +108,15 @@
         background-color: grey;
         width: 2px;
         height: 20px;
-    }
 
+        // Mobile: Ẩn đường kẻ
+        display: none;
+
+        // Desktop: Hiện đường kẻ
+        @include m.desktop {
+            display: block;
+        }
+    }
 
     &__search {
         position: relative;
@@ -84,82 +132,126 @@
         width: 300px;
         font-size: 0.875rem;
         padding: 12px 18px 12px 30px;
-
     }
 
+    // --- 3. ANNOUNCEMENT BAR (Carousel) ---
     &__announcement-bar {
-        // 1. Phông nền xám nhạt
         background-color: #f4f4f4;
         height: 50px;
         display: flex;
         align-items: center;
-
-
     }
 
     &__carousel {
         width: 100%;
         height: 100%;
-        line-height: 38px; // Canh giữa theo chiều dọc
-        font-size: 1rem;
+        line-height: 38px;
         font-weight: 500;
         text-align: center;
         letter-spacing: 0.1rem;
 
+        // Mobile: Font nhỏ
+        font-size: 0.875rem;
+
+        // Desktop: Font to hơn
+        @include m.desktop {
+            font-size: 1rem;
+        }
+
         .swiper-slide {
-            // Đảm bảo chữ được canh giữa tuyệt đối
             justify-content: center;
             align-items: center;
             display: flex;
         }
 
-        // 3. Định kiểu cho nút điều hướng (Navigation Arrows)
+        // Định kiểu nút điều hướng
         .swiper-button-prev,
         .swiper-button-next {
-            color: v.$text-primary; // Màu đen
+            color: v.$text-primary;
             top: 80%;
-            // transform: translateY(-50%);
 
-            // Giảm kích thước nút để phù hợp với thanh nhỏ
-            width: 16px;
-            height: 16px;
+            // Mobile: Nút nhỏ, khoảng cách hẹp (100px)
+            width: 10px;
+            height: 10px;
 
             &:after {
-                font-size: 1.2rem; // Kích thước icon mũi tên
+                font-size: 1.2rem;
                 font-weight: 800;
+            }
+
+            // Desktop: Nút to hơn (16px), khoảng cách rộng (300px)
+            @include m.desktop {
+                width: 16px;
+                height: 16px;
             }
         }
 
         .swiper-button-prev {
-            left: 300px;
+            left: 100px; // Mobile
+
+            @include m.desktop {
+                left: 300px;
+            }
+
+            // Desktop
         }
 
         .swiper-button-next {
-            right: 300px;
+            right: 100px; // Mobile
+
+            @include m.desktop {
+                right: 300px;
+            }
+
+            // Desktop
         }
     }
 
+    // --- 4. DROPDOWN (Hover Product) ---
     &__showCategory {
-        z-index: 10;
-        position: absolute;
-        top: 140px;
-        left: 0;
-        width: 100%;
-        background-color: v.$bg-secondary;
+        @include dropdown-animation;
     }
 
     &__list {
         display: flex;
-        justify-content: center;
-        gap: 20px;
-        align-items: center;
+
+        // Mobile: List bị wrap, canh lề trái
+        flex-wrap: wrap;
+        align-items: start;
+        padding: 40px 0 20px 0;
+        justify-content: center; // Có thể giữ center cho mobile nếu muốn
+
+        // Desktop: List nằm ngang, canh giữa
+        @include m.desktop {
+            flex-wrap: nowrap;
+            align-items: center;
+            padding: 0; // Reset padding của mobile
+            gap: 20px;
+        }
     }
 
     &__list__items {
-        padding: 40px 0;
-        text-align: center;
         text-transform: capitalize;
         color: white;
+
+        // Mobile: Layout ngang (ảnh + chữ), width 40%
+        width: 40%;
+        margin: auto;
+        padding: 0;
+        gap: 20px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        text-align: left;
+
+        // Desktop: Layout dọc (ảnh trên, chữ dưới), width auto
+        @include m.desktop {
+            width: auto;
+            margin: 0;
+            padding: 40px 0;
+            display: block; // Trở về block để ảnh và chữ xuống dòng tự nhiên
+            text-align: center;
+        }
 
         & p:hover {
             color: v.$accent;
@@ -169,32 +261,50 @@
 
     &__list__items img {
         cursor: pointer;
-        width: 300px;
-        height: 300px;
+
+        // Mobile: Ảnh nhỏ
+        width: 120px;
+        height: auto;
+
+        // Desktop: Ảnh to
+        @include m.desktop {
+            width: 300px;
+            height: 300px;
+        }
     }
 
     &__list__items p {
-        margin-top: 10px;
-        font-size: 1.2rem;
+        // Mobile: Font chữ trong list hover
+        margin-top: 0; // Reset margin vì đang flex ngang
+        font-size: 1rem;
+
+        // Desktop
+        @include m.desktop {
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
     }
 
     &__title__hover {
         text-align: center;
-        font-size: 1.2rem;
         text-transform: uppercase;
-        padding: 20px;
 
+        // Mobile
+        font-size: 1rem;
+        padding: 10px 0;
+
+        // Desktop
+        @include m.desktop {
+            font-size: 1.2rem;
+            padding: 20px;
+        }
     }
 
+    // --- 5. DROPDOWN (Hover Male/Female) ---
     &__showMaleAndFemale {
+        @include dropdown-animation;
         z-index: 100;
-        position: absolute;
-        top: 140px;
-        left: 0;
-        width: 100%;
-        background-color: v.$bg-secondary;
     }
-
 
     &__content {
         padding: 32px 10px;
@@ -203,104 +313,30 @@
         gap: 40px;
         color: white;
         line-height: 1.2rem;
+        // Mobile có thể cần wrap nếu nội dung quá dài, nhưng với layout 3 cột này có thể giữ nguyên flex
     }
 
     &__content__items {
         width: 260px;
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-top: 20px;
+            font-size: 1.25rem;
+        }
+
+        p {
+            color: wheat;
+            cursor: pointer;
+            font-size: 15px;
+        }
     }
 
     &__outstanding {
         border-right: 1px dashed gray;
-    }
-
-    &__content__items h2 {
-        font-size: 1.4rem;
-        margin-bottom: 20px;
-    }
-
-    &__content__items h3 {
-        margin-top: 20px;
-        font-size: 1.25rem;
-    }
-
-    &__content__items p {
-        color: wheat;
-        cursor: pointer;
-        font-size: 15px;
-    }
-
-
-    @include m.desktop {
-        &__utinity__item span {
-            display: none;
-        }
-
-        &__menu {
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        &__line {
-            display: none;
-        }
-
-        &__carousel {
-            font-size: 0.875rem;
-
-            .swiper-button-prev,
-            .swiper-button-next {
-                width: 10px;
-                height: 10px;
-            }
-
-            .swiper-button-prev {
-                left: 100px;
-            }
-
-            .swiper-button-next {
-                right: 100px;
-            }
-        }
-
-        &__list {
-            flex-direction: flex;
-            flex-wrap: wrap;
-            align-items: start;
-            padding: 40px 0 20px 0;
-        }
-
-        &__list__items {
-            width: 40%;
-            margin: auto;
-            padding: 0;
-            gap: 20px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-
-            & p:hover {
-                color: v.$accent-hover;
-            }
-        }
-
-
-        &__list__items img {
-            width: 120px;
-            height: auto;
-        }
-
-        &__title__hover {
-            font-size: 1rem;
-            padding: 10px 0;
-        }
-
-    }
-
-    @include m.tablet {
-        &__menu {
-            margin: 12px 12px;
-        }
-
-
     }
 }

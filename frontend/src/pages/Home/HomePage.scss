@@ -1,7 +1,107 @@
-.items {
-    background-color: red;
+@use "../../styles/mixins.scss" as m;
+@use "../../styles/variables.scss" as v;
+
+.banner {
+    margin: 10px 0;
+
+    & img {
+        height: 740px;
+        width: 100%;
+        object-fit: fill;
+    }
 }
 
-.items--blue {
-    background-color: blue;
+.collection {
+    padding: 80px 0 40px 0;
+
+    &__wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &__img {
+        margin-bottom: 20px;
+    }
+
+    &__img img {
+        width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    &__title {
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        cursor: pointer;
+
+        &:hover {
+            color: v.$accent-hover;
+        }
+    }
+
+    &__desc {
+        font-size: 1.1rem;
+    }
+
+    @include m.laptop {
+        &__wrap {
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+
+        &__img img {
+            height: 360px;
+            object-fit: fill;
+        }
+    }
+}
+
+.buy {
+    padding: 40px 0 30px 0;
+
+    &__title {
+        text-align: center;
+        font-size: 1.875rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 0px 0px 40px 0px;
+    }
+
+    &__wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+    }
+
+    &__items {
+        position: relative;
+        height: 300px;
+        width: 100%;
+        padding: 0px;
+    }
+
+    &__items img {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        opacity: 0.8;
+        z-index: 2;
+    }
+
+    &__items:hover img {
+        opacity: 1;
+    }
+
+    &__content {
+
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+        background-color: red;
+    }
+
 }

@@ -137,93 +137,102 @@ const Header = () => {
         </div>
       </div>
       <AnnouncementBar />
-      {isHoveredProduct && (
-        <div
-          className="header__showCategory"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <div className="header__list">
-            <div className="header__list__items">
-              <img src={dropMenu1} alt="drop__menu_1" />
-              <p>Cho Nam</p>
-            </div>
-
-            <div className="header__list__items">
-              <img src={dropMenu2} alt="drop__menu_2" />
-              <p>Cho Nữ</p>
-            </div>
-
-            <div className="header__list__items">
-              <img src={dropMenu3} alt="drop__menu_3" />
-              <p>outlet sale</p>
-            </div>
-
-            <div className="header__list__items">
-              <img src={dropMenu4} alt="drop__menu_4" />
-              <p>Thời trang và phụ kiện</p>
-            </div>
+      <div
+        className={`header__showCategory ${isHoveredProduct ? "active" : ""}`}
+        onMouseEnter={() => handleMouseEnter(setIsHoveredProduct)}
+        onMouseLeave={() => handleMouseLeave(setIsHoveredProduct)}
+      >
+        <div className="header__list">
+          <div className="header__list__items">
+            <img src={dropMenu1} alt="drop__menu_1" />
+            <p>Cho Nam</p>
           </div>
-          <p className="header__title__hover">
-            MỌI NGƯỜI THƯỜNG GỌI CHÚNG TÔI LÀ{" "}
-            <span style={{ color: "white" }}>DỨA</span> !
-          </p>
-        </div>
-      )}
-      {(isHoveredFemale || isHoveredMale) && (
-        <div className="header__showMaleAndFemale">
-          <div className="header__content">
-            <div className="header__outstanding header__content__items">
-              <h2>Nổi bật</h2>
-              <p>Best saller</p>
-              <p>New Arrival</p>
-              <p>Sale off</p>
 
-              <h3>Bộ sưu tập</h3>
-              <p>Recycled Material</p>
-              <p>Day slide</p>
-              <p>Denim</p>
-              <p>Track 6 OG</p>
-              <p>Pattas Polka Dots</p>
-
-              <h3>Collaboration</h3>
-            </div>
-            <div className="header__shoes header__content__items">
-              <h2>Giày</h2>
-              <h3>Dòng sản phẩm</h3>
-              <p>Batas</p>
-              <p>Vintas</p>
-              <p>Urbas</p>
-              <p>Creas</p>
-              <p>Track 6</p>
-              <h3>Style</h3>
-              <p>High Top</p>
-              <p>Low Top</p>
-              <p>Slip-on</p>
-              <h3>Tất cả giày</h3>
-            </div>
-            <div className="header__fashionAndAccessory header__content__items">
-              <h2>Thời trang & phụ kiện</h2>
-              <h3>Nửa trên</h3>
-              <p>Basic Tee</p>
-              <p>Graphic Tee</p>
-              <p>Sweatshirt</p>
-              <p>Hoodie</p>
-
-              <h3>Phụ kiện</h3>
-              <p>Nón</p>
-              <p>Dây giày</p>
-              <p>Vớ</p>
-              <p>Túi Tote</p>
-              <h3>Xem tất cả</h3>
-            </div>
+          <div className="header__list__items">
+            <img src={dropMenu2} alt="drop__menu_2" />
+            <p>Cho Nữ</p>
           </div>
-          <p className="header__title__hover">
-            Mọi người thường gọi chúng tôi là{" "}
-            <span style={{ color: "white" }}>DỨA</span> !{" "}
-          </p>
+
+          <div className="header__list__items">
+            <img src={dropMenu3} alt="drop__menu_3" />
+            <p>outlet sale</p>
+          </div>
+
+          <div className="header__list__items">
+            <img src={dropMenu4} alt="drop__menu_4" />
+            <p>Thời trang và phụ kiện</p>
+          </div>
         </div>
-      )}
+        <p className="header__title__hover">
+          MỌI NGƯỜI THƯỜNG GỌI CHÚNG TÔI LÀ{" "}
+          <span style={{ color: "white" }}>DỨA</span> !
+        </p>
+      </div>
+      <div
+        className={`header__showMaleAndFemale ${
+          isHoveredFemale || isHoveredMale ? "active" : ""
+        }`}
+        // Cần xử lý event chuột ở đây để khi chuột di chuyển từ nút Nam/Nữ xuống menu thì không bị mất
+        onMouseEnter={() => {
+          if (isHoveredMale) handleMouseEnter(setIsHoveredMale);
+          if (isHoveredFemale) handleMouseEnter(setIsHoveredFemale);
+        }}
+        onMouseLeave={() => {
+          if (isHoveredMale) handleMouseLeave(setIsHoveredMale);
+          if (isHoveredFemale) handleMouseLeave(setIsHoveredFemale);
+        }}
+      >
+        <div className="header__content">
+          <div className="header__outstanding header__content__items">
+            <h2>Nổi bật</h2>
+            <p>Best saller</p>
+            <p>New Arrival</p>
+            <p>Sale off</p>
+
+            <h3>Bộ sưu tập</h3>
+            <p>Recycled Material</p>
+            <p>Day slide</p>
+            <p>Denim</p>
+            <p>Track 6 OG</p>
+            <p>Pattas Polka Dots</p>
+
+            <h3>Collaboration</h3>
+          </div>
+          <div className="header__shoes header__content__items">
+            <h2>Giày</h2>
+            <h3>Dòng sản phẩm</h3>
+            <p>Batas</p>
+            <p>Vintas</p>
+            <p>Urbas</p>
+            <p>Creas</p>
+            <p>Track 6</p>
+            <h3>Style</h3>
+            <p>High Top</p>
+            <p>Low Top</p>
+            <p>Slip-on</p>
+            <h3>Tất cả giày</h3>
+          </div>
+          <div className="header__fashionAndAccessory header__content__items">
+            <h2>Thời trang & phụ kiện</h2>
+            <h3>Nửa trên</h3>
+            <p>Basic Tee</p>
+            <p>Graphic Tee</p>
+            <p>Sweatshirt</p>
+            <p>Hoodie</p>
+
+            <h3>Phụ kiện</h3>
+            <p>Nón</p>
+            <p>Dây giày</p>
+            <p>Vớ</p>
+            <p>Túi Tote</p>
+            <h3>Xem tất cả</h3>
+          </div>
+        </div>
+        <p className="header__title__hover">
+          Mọi người thường gọi chúng tôi là{" "}
+          <span style={{ color: "white" }}>DỨA</span> !{" "}
+        </p>
+      </div>
     </header>
   );
 };

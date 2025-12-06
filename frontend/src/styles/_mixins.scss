@@ -4,19 +4,25 @@
 // ==========================================================
 
 @mixin mobile {
-    @media (max-width : 576px) {
+    @media (min-width : 576px) {
         @content ;
     }
 }
 
 @mixin tablet {
-    @media (max-width : 768px) {
+    @media (min-width : 768px) {
+        @content ;
+    }
+}
+
+@mixin laptop {
+    @media (min-width : 992px) {
         @content ;
     }
 }
 
 @mixin desktop {
-    @media (max-width : 1024px) {
+    @media (min-width : 1200px) {
         @content ;
     }
 }
