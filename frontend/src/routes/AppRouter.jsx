@@ -58,7 +58,7 @@ const AppRouter = () => {
           <Route element={<MainLayout />}>
             {/* Ai xem cũng được */}
             <Route path="/" element={<HomePage />}></Route>
-
+            <Route path="*" element={NotFoundPage}></Route>
             {/* Phải đăng nhập mới xem được */}
             <Route element={<ProtectedRoute />}></Route>
           </Route>
@@ -66,7 +66,7 @@ const AppRouter = () => {
           {/* ========================================================= */}
           {/* NHÓM 2: Full màn hình                       */}
           {/* ========================================================= */}
-          <Route path="/notFoundPage" element={<NotFoundPage />}></Route>
+          {/* <Route path="*" element={<NotFoundPage />}></Route> */}
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/register" element={<RegisterPage />}></Route>
           <Route path="/forgot" element={<ForgotPage />}></Route>

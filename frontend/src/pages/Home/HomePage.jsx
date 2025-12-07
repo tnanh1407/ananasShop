@@ -6,6 +6,7 @@ import collectionTwo from "../../assets/collection2.jpg";
 import buy1 from "../../assets/buy1.jpg";
 import buy2 from "../../assets/buy2.jpg";
 import buy3 from "../../assets/buy3.jpg";
+import banner2 from "../../assets/banner_2.jpg";
 const HomePage = () => {
   return (
     <>
@@ -48,7 +49,7 @@ const HomePage = () => {
         <Container fluid="md">
           <h2 className="buy__title">Danh mục mua hàng</h2>
           <Row className="buy__wrap">
-            <Col className="buy__items" xs={12}>
+            <Col className="buy__items" xs={12} lg={4}>
               <img src={buy1}></img>
               <div className="buy__content">
                 <h3 className="buy__items__title">Giày Nam</h3>
@@ -57,7 +58,7 @@ const HomePage = () => {
                 <p>Sale-off</p>
               </div>
             </Col>
-            <Col className="buy__items" xs={12}>
+            <Col className="buy__items" xs={12} lg={4}>
               <img src={buy2}></img>
               <div className="buy__content">
                 <h3 className="buy__items__title">Giày Nữ</h3>
@@ -66,7 +67,7 @@ const HomePage = () => {
                 <p>Sale-off</p>
               </div>
             </Col>
-            <Col className="buy__items" xs={12}>
+            <Col className="buy__items" xs={12} lg={4}>
               <img src={buy3}></img>
               <div className="buy__content">
                 <h3 className="buy__items__title">Dòng sản phẩm</h3>
@@ -77,6 +78,12 @@ const HomePage = () => {
               </div>
             </Col>
           </Row>
+        </Container>
+      </section>
+
+      <section className="bannerTwo">
+        <Container fluid className="p-0">
+          <img src={banner2}></img>
         </Container>
       </section>
     </>
