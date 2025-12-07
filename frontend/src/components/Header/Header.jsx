@@ -1,4 +1,7 @@
 import "./Header.scss";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectCurrentUser } from "../../features/auth/authSlice.jsx";
 import {
   BookHeart,
   ChevronDown,
@@ -46,6 +49,8 @@ const AnnouncementBar = () => {
   );
 };
 const Header = () => {
+  const user = useSelector(selectCurrentUser);
+  const nagative = useNavigate();
   const [isHoveredProduct, setIsHoveredProduct] = useState(false);
   const [isHoveredMale, setIsHoveredMale] = useState(false);
   const [isHoveredFemale, setIsHoveredFemale] = useState(false);
@@ -63,6 +68,14 @@ const Header = () => {
       callback(false);
     }, 200); // 200ms là độ trễ
   };
+
+  const handleUserClick = () => {
+    if (user) {
+      nagative("/profile");
+    } else {
+      nagative("/login");
+    }
+  };
   return (
     <header className="header">
       <div className="header__utinity">
@@ -78,9 +91,9 @@ const Header = () => {
           <BookHeart />
           <span>Yêu thích</span>
         </div>
-        <div className="header__utinity__item">
+        <div className="header__utinity__item" onClick={handleUserClick}>
           <User />
-          <span>Đăng nhập</span>
+          <span>{user ? `${user.username}` : "Đăng nhập"}</span>
         </div>
         <div className="header__utinity__item">
           <Handbag />

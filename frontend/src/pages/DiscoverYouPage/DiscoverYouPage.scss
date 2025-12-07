@@ -1,0 +1,237 @@
+@use "../../styles/mixins.scss" as m;
+@use "../../styles/variables.scss" as v;
+
+.banner {
+    margin: 10px 0;
+
+    & img {
+        width: 100%;
+        object-fit: fill;
+    }
+}
+
+.main {
+    margin: 30px 0;
+
+    &__title {
+        text-align: center;
+        font-size: 4.0625rem;
+        font-weight: 700;
+        padding: 40px 0
+    }
+
+    & .divider {
+        @include m.divider;
+    }
+
+    &__header {
+        padding: 20px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px dashed gray;
+    }
+
+    &__header__left {
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+
+    }
+
+    &__header__left span:nth-child(1) {
+        color: v.$text-tertiary;
+        opacity: 0.8;
+    }
+
+    &__header__left span:nth-child(2) {
+        font-weight: 700;
+    }
+
+    &__header__right {
+        display: none;
+    }
+
+    &__content {
+        font-size: 1rem;
+    }
+
+    &__content__img__one {
+        width: 100%;
+    }
+
+    &__content__note {
+        font-size: 0.75rem;
+        line-height: 1.1rem;
+        color: v.$text-tertiary;
+    }
+
+    &__content__title {
+        font-weight: 700;
+        font-size: 1.125rem;
+        margin: 2rem 0;
+        line-height: 1.4rem;
+        padding: 30px 0;
+        border-bottom: 1px dashed gray;
+        border-top: 1px dashed gray;
+        text-align: center;
+    }
+
+    &__content__2 {
+        margin: 10px 0;
+    }
+
+    &__content__detail {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__content__detail__img img {
+        width: 100%;
+
+    }
+
+    &__header.high {
+        margin-top: 10px;
+        border-bottom: none;
+        border-top: 1px dashed gray;
+    }
+
+    &__header__right__button {
+        background-color: #1877F2;
+        color: white;
+        border-radius: 4px;
+        border: none;
+    }
+
+    &__header__right__share {
+        cursor: pointer;
+    }
+
+
+
+
+    @include m.laptop {
+        &__content__detail {
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+
+        &__header__right {
+            display: block;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    }
+}
+
+.product-related {
+    padding: 40px 0;
+
+    &__title {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 1.875rem;
+        font-weight: 700;
+    }
+
+    &__items__img img {
+        width: 100%;
+        cursor: pointer;
+    }
+
+    &__items__details {
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__items__names {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+
+        &:hover {
+            color: v.$accent-hover;
+            cursor: pointer;
+        }
+    }
+
+    &__items__styles {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    &__items__price {
+        width: 80%;
+        display: flex;
+        justify-content: space-around;
+
+    }
+
+    &__items__price--news {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    &__items__price--old {
+        color: v.$text-tertiary;
+        font-size: 0.875rem;
+        margin-bottom: 15px;
+        text-decoration: line-through;
+    }
+}
+
+.news-related {
+    padding: 40px 0;
+
+    &__title {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 1.875rem;
+        font-weight: 700;
+    }
+
+    &__items__img img {
+        width: 100%;
+        cursor: pointer;
+    }
+
+    &__items__details {
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    &__items__names {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+
+        &:hover {
+            color: v.$accent-hover;
+            cursor: pointer;
+        }
+    }
+
+    &__items__styles {
+        font-size: 1rem;
+        line-height: 1.2rem;
+        margin-bottom: 5px;
+    }
+
+    &__items__more {
+        font-size: 1rem;
+        color: v.$accent;
+        font-style: italic;
+        cursor: pointer;
+    }
+
+}

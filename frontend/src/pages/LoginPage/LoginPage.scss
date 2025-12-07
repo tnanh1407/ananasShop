@@ -2,18 +2,38 @@
 @use "../../styles/mixins.scss" as m;
 
 .login-page {
+    // --- MOBILE FIRST (Mặc định cho màn hình nhỏ) ---
     position: relative;
-    display: flex;
-    background-color: v.$bg-login;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden; // Ẩn thanh cuộn nếu nội dung quá dài
 
+    &__banner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; // Đảm bảo ảnh phủ kín không bị méo
+        }
+    }
 
     &__content {
-        flex: 1;
+        position: relative;
+        z-index: 2; // Nằm trên banner
+        width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
-        margin: auto;
         justify-content: center;
         align-items: center;
+        background-color: rgba(221, 213, 213, 0.9); // Nền mờ cho mobile
+        padding: 20px; // Thêm padding để không bị sát lề trên mobile
     }
 
     &__header {
@@ -38,14 +58,16 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+        width: 100%; // Đảm bảo form responsive
+        max-width: 340px; // Giới hạn chiều rộng tối đa giống design cũ
     }
 
     &__input-group input {
-        width: 340px;
+        width: 100%; // Chuyển từ 340px cứng sang 100% để không vỡ layout trên mobile nhỏ
         height: 40px;
         margin-bottom: 2px;
         padding: 10px 20px 8px;
-        background-color: v.$bg-primary ;
+        background-color: v.$bg-primary;
         border: none;
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     }
@@ -58,11 +80,13 @@
         position: absolute;
         right: 10px;
         top: 8px;
+        cursor: pointer; // Thêm cursor pointer cho trải nghiệm tốt hơn
     }
 
     &__actions {
         display: flex;
         justify-content: space-between;
+        align-items: center; // Căn giữa theo trục dọc
     }
 
     &__remember {
@@ -70,11 +94,11 @@
         align-items: center;
         font-size: 0.875rem;
         opacity: 0.7;
-    }
 
-    &__remember input {
-        margin-right: 10px;
-        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        input {
+            margin-right: 10px;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px; // Giữ nguyên shadow cũ của bạn
+        }
     }
 
     &__forgot {
@@ -88,16 +112,11 @@
         }
     }
 
-    &__banner {
-        width: 700px;
-        height: 100vh;
-        overflow: hidden;
-    }
-
     &__btn-submit {
         @include m.button-style;
         font-size: 0.875rem;
         color: v.$text-second;
+        width: 100%; // Button full width trên form
     }
 
     &__btn-register {
@@ -106,43 +125,43 @@
         font-size: 0.875rem;
         text-align: center;
         text-decoration: none;
+        width: 100%;
 
         &:hover {
             background-color: v.$text-second;
             filter: brightness(0.8);
-
         }
     }
-
 
     &__coppy-right {
         position: absolute;
-        bottom: 0;
-        margin-bottom: 20px;
+        bottom: 20px;
         opacity: 0.7;
         font-size: 0.875rem;
+        text-align: center;
     }
 
+    // --- RESPONSIVE LAPTOP/DESKTOP (Màn hình lớn) ---
+    // Khi màn hình đủ lớn, chuyển layout sang dạng 2 cột (Side-by-Side)
+    @include m.laptop {
+        display: flex; // Flex row
+        background-color: v.$bg-login;
 
-    @include m.tablet {
-
-        .login-page {
-            position: relative;
+        &__banner {
+            position: static; // Bỏ absolute
+            width: 700px; // Quay về chiều rộng cố định
+            height: 100vh;
+            flex-shrink: 0; // Không cho banner bị co nhỏ lại
+            z-index: auto;
         }
 
         &__content {
-            z-index: 2;
-            background-color: rgba(221, 213, 213, 0.9); // Nền mờ
-            height: 100vh;
-        }
-
-        &__banner {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1;
+            position: static; // Bỏ absolute/overlay
+            flex: 1; // Chiếm phần còn lại
+            background-color: transparent; // Bỏ nền mờ
+            height: auto; // Chiều cao tự động theo flex cha
+            margin: auto;
+            padding: 0;
         }
     }
 }

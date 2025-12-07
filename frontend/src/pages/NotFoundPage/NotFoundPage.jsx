@@ -1,9 +1,15 @@
-import React from "react";
+import "./NotFoundPage.scss";
+import PageNotFound from "../../assets/page_not_found.png";
+import { Container } from "react-bootstrap";
 
 const NotFoundPage = () => {
   return (
     <>
-      <h1>Không tìm thấy trang nào !</h1>
+      <div className="page_not_found">
+        <Container fluid className="p-0">
+          <img src={PageNotFound}></img>
+        </Container>
+      </div>
     </>
   );
 };

@@ -12,6 +12,9 @@ import {
 } from "../features/auth/authSlice.jsx";
 
 // Import Component
+const ProfilePage = React.lazy(() =>
+  import("../pages/ProfilePage/ProfilePage.jsx")
+);
 const HomePage = React.lazy(() => import("../pages/Home/HomePage"));
 const LoginPage = React.lazy(() => import("../pages/LoginPage/LoginPage"));
 const NotFoundPage = React.lazy(() =>
@@ -23,6 +26,10 @@ const RegisterPage = React.lazy(() =>
 
 const ForgotPage = React.lazy(() =>
   import("../pages/ForgotPage/ForgotPage.jsx")
+);
+
+const DiscoverYouPage = React.lazy(() =>
+  import("../pages/DiscoverYouPage/DiscoverYouPage.jsx")
 );
 
 // Component bảo vệ các router (Protected Route)
@@ -44,7 +51,6 @@ const ProtectedRoute = () => {
 const AppRouter = () => {
   return (
     <BrowserRouter>
-      {/* 1 */}
       <React.Suspense
         fallback={
           <div className="loading-spinner">Đang tải trang xuống ...</div>
@@ -58,7 +64,8 @@ const AppRouter = () => {
           <Route element={<MainLayout />}>
             {/* Ai xem cũng được */}
             <Route path="/" element={<HomePage />}></Route>
-            <Route path="*" element={NotFoundPage}></Route>
+            <Route path="*" element={<NotFoundPage />}></Route>
+            <Route path="/discoverYou" element={<DiscoverYouPage />}></Route>
             {/* Phải đăng nhập mới xem được */}
             <Route element={<ProtectedRoute />}></Route>
           </Route>
@@ -70,6 +77,9 @@ const AppRouter = () => {
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/register" element={<RegisterPage />}></Route>
           <Route path="/forgot" element={<ForgotPage />}></Route>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/profile" element={<ProfilePage />}></Route>
+          </Route>
         </Routes>
       </React.Suspense>
     </BrowserRouter>

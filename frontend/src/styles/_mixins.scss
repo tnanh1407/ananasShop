@@ -48,3 +48,10 @@
         background-color: $bg-hover;
     }
 }
+
+
+@mixin divider() {
+    border-bottom: #000 3px solid;
+    height: 1px;
+    margin-bottom: 0px;
+}
