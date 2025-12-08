@@ -1,9 +1,11 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Import Layout
 import MainLayout from "../layouts/MainLayout.jsx";
+import ProfileLayout from "../layouts/ProfileLayout/ProfileLayout.jsx";
 
 // Import selector Redux
 import {
@@ -23,11 +25,9 @@ const NotFoundPage = React.lazy(() =>
 const RegisterPage = React.lazy(() =>
   import("../pages/RegisterPage/RegisterPage")
 );
-
 const ForgotPage = React.lazy(() =>
   import("../pages/ForgotPage/ForgotPage.jsx")
 );
-
 const DiscoverYouPage = React.lazy(() =>
   import("../pages/DiscoverYouPage/DiscoverYouPage.jsx")
 );
@@ -46,7 +46,7 @@ const ProtectedRoute = () => {
     );
   }
 
-  return isAuthenticated;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 const AppRouter = () => {
   return (
@@ -73,12 +73,24 @@ const AppRouter = () => {
           {/* ========================================================= */}
           {/* NHÓM 2: Full màn hình                       */}
           {/* ========================================================= */}
-          {/* <Route path="*" element={<NotFoundPage />}></Route> */}
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/register" element={<RegisterPage />}></Route>
           <Route path="/forgot" element={<ForgotPage />}></Route>
+
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<ProfilePage />}></Route>
+          </Route>
+
+          {/* ========================================================= */}
+          {/* NHÓM 3 : SIDEBAR PROFILE LAYOUT                       */}
+          {/* ========================================================= */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/profile" element={<ProfileLayout />}>
+              <Route
+                index
+                element={<Navigator to="/profile/infoUser" replace />}
+              ></Route>
+            </Route>
           </Route>
         </Routes>
       </React.Suspense>

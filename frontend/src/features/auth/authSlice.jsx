@@ -21,7 +21,7 @@ export const authSlice = createSlice({
     //  Hành động khi đăng xuất
     logout: (state) => {
       state.user = null;
-      state.isAuthenticated = true;
+      state.isAuthenticated = false;
       state.isLoading = false;
     },
 

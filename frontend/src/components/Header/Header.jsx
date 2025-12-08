@@ -2,6 +2,8 @@ import "./Header.scss";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../features/auth/authSlice.jsx";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import {
   BookHeart,
   ChevronDown,
@@ -73,7 +75,37 @@ const Header = () => {
     if (user) {
       nagative("/profile");
     } else {
-      nagative("/login");
+      // Hiển thị Popup trước khi chuyển trang
+      Swal.fire({
+        title: "Bạn chưa đăng nhập?",
+        text: "Vui lòng đăng nhập để tiếp tục!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#f15e2c", // Màu cam Ananas
+        cancelButtonColor: "#8b8b8b",
+        confirmButtonText: "Đăng nhập ngay",
+        cancelButtonText: "Để sau",
+        // Cấu hình Animate.css theo yêu cầu của bạn
+        showClass: {
+          popup: `
+            animate__animated
+            animate__fadeInUp
+            animate__faster
+          `,
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `,
+        },
+      }).then((result) => {
+        // Chỉ chuyển trang khi người dùng ấn nút "Đăng nhập ngay"
+        if (result.isConfirmed) {
+          nagative("/login");
+        }
+      });
     }
   };
   return (
@@ -140,7 +172,9 @@ const Header = () => {
           </div>
           <div className="header__line"></div>
           <div className="header__category__items">
-            <img src={DiscoverYOU} alt="DiscoverYOU" />
+            <Link to="/discoverYou">
+              <img src={DiscoverYOU} alt="DiscoverYOU" />
+            </Link>
           </div>
         </div>
 

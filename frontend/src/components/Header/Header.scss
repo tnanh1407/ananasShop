@@ -97,6 +97,12 @@
         align-items: center;
         gap: 4px;
         padding: 40px 0px;
+
+        a {
+            display: flex; // Để xoá khoảng trắng thừa dưới chân ảnh
+            text-decoration: none;
+        }
+
     }
 
     &__category__items span {
