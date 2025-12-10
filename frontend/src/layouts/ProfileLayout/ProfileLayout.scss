@@ -1,11 +1,17 @@
+@use "../../styles/variables.scss" as v;
+
 .profile-layout {
-    background-color: red;
-    min-height: 100vh;
-    padding: 20px 0;
+    border-top: 1px dashed #b3aeae;
+    background-color: v.$bg-profile ; // Màu nền xám nhẹ cho toàn vùng profile
+    min-height: 80vh; // Đảm bảo chiều cao tối thiểu
+    padding: 40px 0;
 }
 
 .profile-content {
-    background-color: blue;
-    padding: 20px;
-    border-radius: 8px;
+
+    background-color: v.$text-second; // Nền trắng cho nội dung bên phải
+    padding: 30px;
+    border-radius: 12px;
+    min-height: 100%; // Cao bằng sidebar nếu có thể
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }

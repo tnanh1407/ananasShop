@@ -1,15 +1,19 @@
 @use "../../styles/variables.scss" as v;
 
 .profile-sidebar {
-    background-color: #fff;
+    background-color: v.$bg-primary;
     width: 100%;
+    height: 100%;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
     &__user {
         display: flex;
         align-items: center;
         gap: 10px;
         padding-bottom: 15px;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px dashed v.$text-tertiary;
         margin-bottom: 10px;
 
         .profile-sidebar__avatar {
@@ -29,7 +33,7 @@
 
             .account-label {
                 font-size: 0.8rem;
-                color: #888;
+                color: v.$text-tertiary;
             }
         }
     }
@@ -43,9 +47,9 @@
             align-items: center;
             gap: 10px;
             padding: 10px 0;
-            color: #333;
+            color: v.$text-primary;
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 1rem;
             transition: color 0.2s;
 
             .icon {
@@ -56,10 +60,10 @@
             }
 
             &:hover {
-                color: v.$accent; // Dùng màu cam của bạn
+                color: v.$accent-hover; // Dùng màu cam của bạn
 
                 .icon {
-                    color: v.$accent;
+                    color: v.$accent-hover;
                 }
             }
 

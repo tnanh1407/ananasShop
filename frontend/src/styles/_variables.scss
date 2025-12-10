@@ -7,6 +7,7 @@
   --color-background-primary: #ffffff;
   --color-background-secondary: #4C4C4C;
   --color-background-tertiary: #000000;
+  --color-background-profile: #f5f5f5;
   // Màu nhấn (Thương hiệu)
   --color-accent: #f15e2c; // Cam (Nút Mua Hàng, Giảm giá)
   --color-accent-hover: #e04a18; // Cam đậm hơn khi hover
@@ -22,6 +23,7 @@ $text-tertiary : var(--color-text-tertiary);
 $bg-primary: var(--color-background-primary);
 $bg-secondary: var(--color-background-secondary);
 $bg-tertiary : var(--color-background-tertiary);
+$bg-profile : var(--color-background-profile);
 
 $accent: var(--color-accent);
 $accent-hover: var(--color-accent-hover);

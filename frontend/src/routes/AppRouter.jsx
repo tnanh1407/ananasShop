@@ -1,6 +1,12 @@
 import React from "react";
 
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Import Layout
@@ -14,9 +20,6 @@ import {
 } from "../features/auth/authSlice.jsx";
 
 // Import Component
-const ProfilePage = React.lazy(() =>
-  import("../pages/ProfilePage/ProfilePage.jsx")
-);
 const HomePage = React.lazy(() => import("../pages/Home/HomePage"));
 const LoginPage = React.lazy(() => import("../pages/LoginPage/LoginPage"));
 const NotFoundPage = React.lazy(() =>
@@ -32,6 +35,12 @@ const DiscoverYouPage = React.lazy(() =>
   import("../pages/DiscoverYouPage/DiscoverYouPage.jsx")
 );
 
+const InfoUserPage = React.lazy(() =>
+  import("../pages/ProfilePage/InfoUserPage/InfoUserPage.jsx")
+);
+const NotificationPage = React.lazy(() =>
+  import("../pages/ProfilePage/NotificationPage/NotificationPage.jsx")
+);
 // Component bảo vệ các router (Protected Route)
 
 const ProtectedRoute = () => {
@@ -66,8 +75,17 @@ const AppRouter = () => {
             <Route path="/" element={<HomePage />}></Route>
             <Route path="*" element={<NotFoundPage />}></Route>
             <Route path="/discoverYou" element={<DiscoverYouPage />}></Route>
-            {/* Phải đăng nhập mới xem được */}
-            <Route element={<ProtectedRoute />}></Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route path="/profile" element={<ProfileLayout />}>
+                <Route
+                  index
+                  element={<Navigate to="account" replace />}
+                ></Route>
+                <Route path="account" element={<InfoUserPage />}></Route>
+                <Route path="notification" element={<NotificationPage />} />
+              </Route>
+            </Route>
           </Route>
 
           {/* ========================================================= */}
@@ -77,21 +95,7 @@ const AppRouter = () => {
           <Route path="/register" element={<RegisterPage />}></Route>
           <Route path="/forgot" element={<ForgotPage />}></Route>
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="/profile" element={<ProfilePage />}></Route>
-          </Route>
-
-          {/* ========================================================= */}
-          {/* NHÓM 3 : SIDEBAR PROFILE LAYOUT                       */}
-          {/* ========================================================= */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/profile" element={<ProfileLayout />}>
-              <Route
-                index
-                element={<Navigator to="/profile/infoUser" replace />}
-              ></Route>
-            </Route>
-          </Route>
+          <Route element={<ProtectedRoute />}></Route>
         </Routes>
       </React.Suspense>
     </BrowserRouter>

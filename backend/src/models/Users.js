@@ -40,10 +40,26 @@ const usersSchema = new mongoose.Schema(
       type: String,
       trim: true,
       sparse: true,
-      // cho phép null nhưng không được trùng
     },
     address: {
       type: String,
+    },
+    sex: {
+      type: String,
+      enum: ["male", "female", "other"],
+      default: null,
+    },
+    nationality: {
+      type: String,
+      default: "Vietnam",
+    },
+    urlAvatar: {
+      type: String,
+      default: "",
+    },
+    dateOfBirth: {
+      type: Date,
+      default: null,
     },
   },
   { timestamps: true }
