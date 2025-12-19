@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import userRouter from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
+import Material from "./models/Material.js";
+import { materials } from "./data/materials.seed.js";
 
 dotenv.config();
 
@@ -22,6 +24,20 @@ app.use(cookieParser());
 
 // api
 
+// import dữ liệu vào :
+const seedMaterials = async () => {
+  try {
+    await Material.deleteMany();
+    await Material.insertMany(materials);
+    console.log("✅ Insert materials thành công");
+    process.exit();
+  } catch (e) {
+    console.log("Error insert material : ", e);
+    process.exit();
+  }
+};
+
+seedMaterials();
 app.use("/api/user", userRouter);
 connectDB().then(() => {
   app.listen(PORT, () => {
