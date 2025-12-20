@@ -7,6 +7,12 @@ const productsShema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
+    category: {
+      type: String,
+      enum: ["shoe", "clothes", "accessory", "none"],
+      required: true,
+      default: "none",
+    },
     description: {
       type: String,
       trim: true,
@@ -22,10 +28,12 @@ const productsShema = new mongoose.Schema(
       enum: ["limit", "online", "sale off", "none"],
       default: "none",
     },
-    materialIds: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Material",
-    },
+    materialIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Material",
+      },
+    ],
 
     collectionId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -47,6 +55,11 @@ const productsShema = new mongoose.Schema(
       },
     },
 
+    colorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Color",
+      default: null,
+    },
     gender: {
       type: String,
       enum: ["none", "male", "female"],

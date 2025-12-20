@@ -28,4 +28,4 @@ const productsVariantSchema = mongoose.Schema(
   { timestamps: true }
 );
 const ProductVariant = mongoose.model("ProductVariant", productsVariantSchema);
-export default productsVariantSchema;
+export default ProductVariant;
