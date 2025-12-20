@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const productsShema = new mongoose.Schema(
+const productSchema = new mongoose.Schema(
   {
     nameProduct: {
       type: String,
@@ -54,12 +54,6 @@ const productsShema = new mongoose.Schema(
         default: null,
       },
     },
-
-    colorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Color",
-      default: null,
-    },
     gender: {
       type: String,
       enum: ["none", "male", "female"],
@@ -73,5 +67,5 @@ const productsShema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Product = mongoose.model("Product", productsShema);
+const Product = mongoose.model("Product", productSchema);
 export default Product;

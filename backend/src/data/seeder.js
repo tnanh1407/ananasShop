@@ -47,13 +47,12 @@ const importData = async () => {
       return {
         ...p,
         collectionId: createdCollections[index % createdCollections.length]._id,
-        materialIds: createdMaterials[index % createdMaterials.length]._id,
         design: createdDesigns[index % createdDesigns.length]._id,
       };
     });
 
     const createdProducts = await Product.insertMany(productToImport);
-    console.log("Đã thêm 3 sản phẩm mẫu.");
+    console.log("Đã thêm  sản phẩm mẫu.");
 
     // 4. Tạo Biến thể (Variants) để giải quyết vấn đề nhiều Màu/Size
     const variants = [];
@@ -66,17 +65,24 @@ const importData = async () => {
         validSizes = createdSizes.filter((size) => size.type === "none");
       }
 
+      const radomMaterials = [...createdMaterials]
+        .sort(() => 0.5 - Math.random()) // Trộn ngẫu nhiên danh sách màu
+        .slice(0, Math.floor(Math.random() * 3) + 1); // Lấy ngẫu nhiên 1, 2 hoặc 3 màu
+
       const randomColors = [...createdColors]
         .sort(() => 0.5 - Math.random()) // Trộn ngẫu nhiên danh sách màu
         .slice(0, Math.floor(Math.random() * 3) + 1); // Lấy ngẫu nhiên 1, 2 hoặc 3 màu
 
       randomColors.forEach((color) => {
         validSizes.forEach((size) => {
-          variants.push({
-            productId: product._id,
-            colorId: color._id,
-            sizeId: size._id,
-            stock: Math.floor(Math.random() * 100) + 10, // Tồn kho ngẫu nhiên 10-110
+          radomMaterials.forEach((material) => {
+            variants.push({
+              productId: product._id,
+              colorId: color._id,
+              sizeId: size._id,
+              materialIds: material,
+              stock: Math.floor(Math.random() * 100) + 10, // Tồn kho ngẫu nhiên 10-110
+            });
           });
         });
       });
