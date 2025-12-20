@@ -5,7 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js" ,
+    "data:import" : "node src/data/seeder.js",
+    "data:destroy" : "node src/data/seeder.js -d"
   },
   "keywords": [],
   "author": "",

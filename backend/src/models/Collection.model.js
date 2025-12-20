@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-export const materialSchema = new mongoose.Schema({
+
+const collectionSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -21,5 +22,6 @@ export const materialSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-const Material = mongoose.Schema("Material", materialSchema);
-export default Material;
+
+const Collection = mongoose.model("Collection", collectionSchema);
+export default Collection;

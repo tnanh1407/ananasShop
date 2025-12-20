@@ -24,20 +24,6 @@ app.use(cookieParser());
 
 // api
 
-// import dữ liệu vào :
-const seedMaterials = async () => {
-  try {
-    await Material.deleteMany();
-    await Material.insertMany(materials);
-    console.log("✅ Insert materials thành công");
-    process.exit();
-  } catch (e) {
-    console.log("Error insert material : ", e);
-    process.exit();
-  }
-};
-
-seedMaterials();
 app.use("/api/user", userRouter);
 connectDB().then(() => {
   app.listen(PORT, () => {

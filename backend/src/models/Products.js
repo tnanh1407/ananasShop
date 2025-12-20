@@ -23,6 +23,6 @@ const productsShema = new mongoose.Schema({
   },
   materialIds: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "material",
+    ref: "Material",
   },
 });
