@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-export const materialSchema = new mongoose.Schema(
+
+const designShema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -17,8 +18,13 @@ export const materialSchema = new mongoose.Schema(
       enum: ["active", "inactive"],
       default: "active",
     },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { timestamps: true }
 );
-const Material = mongoose.model("Material", materialSchema);
-export default Material;
+
+const Design = mongoose.model("Design", designShema);
+export default Design;

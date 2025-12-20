@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-export const materialSchema = new mongoose.Schema(
+
+const colorSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -12,6 +13,11 @@ export const materialSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    hex: {
+      type: String,
+      required: true,
+      match: /^#([0-9A-Fa-f]{6})$/,
+    },
     status: {
       type: String,
       enum: ["active", "inactive"],
@@ -20,5 +26,6 @@ export const materialSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const Material = mongoose.model("Material", materialSchema);
-export default Material;
+
+const Color = mongoose.model("Color", colorSchema);
+export default Color;

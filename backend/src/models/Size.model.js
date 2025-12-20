@@ -1,16 +1,20 @@
 import mongoose from "mongoose";
-export const materialSchema = new mongoose.Schema(
+const sizeSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
       unique: true,
-      trim: true,
     },
-    slug: {
+    type: {
       type: String,
+      enum: ["shoe", "clothes", "none"],
       required: true,
-      unique: true,
+    },
+
+    value: {
+      type: Number,
+      default: null,
     },
     status: {
       type: String,
@@ -20,5 +24,6 @@ export const materialSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const Material = mongoose.model("Material", materialSchema);
-export default Material;
+
+const Size = mongoose.model("Size", sizeSchema);
+export default Size;

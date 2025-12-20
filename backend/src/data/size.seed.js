@@ -1,0 +1,26 @@
+export const sizes = [
+  { name: "45", type: "shoe", value: 45 },
+  { name: "44", type: "shoe", value: 44 },
+  { name: "43", type: "shoe", value: 43 },
+  { name: "42", type: "shoe", value: 42 },
+  { name: "41", type: "shoe", value: 41 },
+  { name: "40", type: "shoe", value: 40 },
+  { name: "39", type: "shoe", value: 39 },
+  { name: "38", type: "shoe", value: 38 },
+  { name: "37", type: "shoe", value: 37 },
+  { name: "36", type: "shoe", value: 36 },
+  { name: "35", type: "shoe", value: 35 },
+  { name: "34", type: "shoe", value: 34 },
+  { name: "33", type: "shoe", value: 33 },
+  { name: "32", type: "shoe", value: 32 },
+  { name: "31", type: "shoe", value: 31 },
+  { name: "30", type: "shoe", value: 30 },
+
+  { name: "S", type: "clothes" },
+  { name: "M", type: "clothes" },
+  { name: "L", type: "clothes" },
+  { name: "XL", type: "clothes" },
+  { name: "XXL", type: "clothes" },
+
+  { name: "One Size", type: "none" },
+];
