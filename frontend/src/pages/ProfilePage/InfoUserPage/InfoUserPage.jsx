@@ -13,6 +13,7 @@ import { updateUser } from "../../../api/userAPI.js";
 const InfoUserPage = () => {
   const user = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
+  console.log("Dữ liệu User hiện tại:", user);
 
   //  State quản lí
   const [formData, setFormData] = useState({
@@ -131,8 +132,8 @@ const InfoUserPage = () => {
       // 2.Chuẩn bị dữ liệu khi gửi lên sever
 
       const updatedData = {
-        fulname: formData.fullname,
-        usernaem: formData.username,
+        fullname: formData.fullname,
+        username: formData.username,
         gender: formData.gender,
         nationality: formData.nationality,
         dateOfBirth: dateOfBirth,

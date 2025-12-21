@@ -50,8 +50,6 @@ const LoginPage = () => {
     e.preventDefault();
     // Ngăn Reload trang
 
-    console.log("🔵 Bắt đầu đăng nhập với dữ liệu:", formData);
-
     if (isRemember) {
       localStorage.getItem("savedAccountIndentifier", identifier);
     } else {
@@ -75,10 +73,9 @@ const LoginPage = () => {
     setIsLoading(true);
     try {
       // Gọi API
-      await new Promise((resolve) => setTimeout(resolve, 20000));
+      // await new Promise((resolve) => setTimeout(resolve, 20000));
       const data = await loginUser(formData);
 
-      console.log("🟢 Đăng nhập thành công, Server trả về:", data);
       // Dispatch action lưu user vào Redux Strore
       //  Backend trả về token , message , user
       dispatch(setCredentials({ user: data.user }));

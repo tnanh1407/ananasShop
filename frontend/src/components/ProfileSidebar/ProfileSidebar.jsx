@@ -1,13 +1,25 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../features/auth/authSlice";
-import { User, FileText, MapPin, Bell, Eye } from "lucide-react"; // Import icon từ lucide
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectCurrentUser } from "../../features/auth/authSlice";
+import { User, FileText, MapPin, Bell, Eye, LogOut } from "lucide-react"; // Import icon từ lucide
 import "./ProfileSidebar.scss";
+import { logoutUser } from "../../api/userAPI";
 
 const ProfileSidebar = () => {
   const user = useSelector(selectCurrentUser);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      dispatch(logout());
+      navigate("/login");
+    } catch (error) {
+      console.error("Lỗi khi đăng xuất:", error);
+    }
+  };
   return (
     <aside className="profile-sidebar">
       {/* Phần thông tin user tóm tắt */}
@@ -83,6 +95,16 @@ const ProfileSidebar = () => {
           </div>
           <span>Sản phẩm đã xem</span>
         </NavLink>
+        <div
+          className="menu-item logout-item"
+          onClick={handleLogout}
+          style={{ cursor: "pointer" }}
+        >
+          <div className="icon">
+            <LogOut size={20} />
+          </div>
+          <span>Đăng xuất</span>
+        </div>
       </nav>
     </aside>
   );

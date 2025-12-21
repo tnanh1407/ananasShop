@@ -83,3 +83,13 @@
         }
     }
 }
+
+.logout-item {
+    margin-top: 10px;
+    color: #dc3545; // Màu đỏ đặc trưng cho nút đăng xuất
+
+    &:hover {
+        background-color: #fff5f5;
+        color: #a71d2a;
+    }
+}

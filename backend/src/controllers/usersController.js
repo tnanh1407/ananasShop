@@ -15,14 +15,12 @@ export const registerUserController = async (req, res) => {
   const email = req.body.email ? req.body.email.toLowerCase() : null;
 
   try {
-    // 1. Kiểm tra xem trường bắt buộc đã được nhập chưa
     if (!fullname || !email || !password || !username) {
       return res
         .status(400)
         .json({ message: "Vui lòng điền đầy đủ thông tin trường bắt buộc !" });
     }
 
-    // 2. Kiểm tra xem người dùng đã tồn tại chưa
     const userExists = await User.findOne({
       $or: [{ email: email }, { username: username }],
     });
@@ -40,7 +38,6 @@ export const registerUserController = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // 4 Tạo người dùng mới
     const user = await User.create({
       fullname,
       email,
@@ -87,7 +84,6 @@ export const loginUserController = async (req, res) => {
   try {
     // 2. Định nghĩa các điều kiện tìm kiếm
     const findConditions = [
-      // Email luôn chuyển sang chữ thường để đảm bảo tìm kiếm không phân biệt hoa/thường
       { email: accountIdentifier.toLowerCase() },
       { username: accountIdentifier },
     ];
@@ -96,6 +92,7 @@ export const loginUserController = async (req, res) => {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const userResponse = user.toObject();
+      console.log("User Response before delete password:", userResponse);
       delete userResponse.password;
 
       const token = generateToken(user._id);
@@ -283,11 +280,8 @@ export const getProfileUserController = async (req, res) => {
     const user = req.user;
     if (user) {
       res.status(200).json({
-        _id: user._id,
-        fullname: user.fullname,
-        email: user.email,
-        username: user.username,
-        role: user.role,
+        message: "Lấy thông tin người dùng thành công!",
+        user: user,
       });
     }
   } catch (err) {
