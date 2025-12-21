@@ -164,10 +164,26 @@ export const getByIdUserController = async (req, res) => {
 export const updateUserController = async (req, res) => {
   // 1. lấy ID và URL Parameters và dữ liệu cập nhật từ body
   const { id } = req.params;
-  const { fullname, email, username } = req.body;
+  const {
+    fullname,
+    email,
+    username,
+    phoneNumber,
+    gender,
+    nationality,
+    dateOfBirth,
+  } = req.body;
 
   // 2. Check Xem có dữ liệu nào được cập nhật hay không ?
-  if (!fullname && !email && !username) {
+  if (
+    !fullname &&
+    !email &&
+    !username &&
+    !phoneNumber &&
+    !gender &&
+    !nationality &&
+    !dateOfBirth
+  ) {
     return res
       .status(400)
       .json({ message: "Không có dữ liệu nào cung cấp để cập nhật !" });
@@ -179,7 +195,15 @@ export const updateUserController = async (req, res) => {
     }
 
     // 4 Giới hạn những dữ liệu người dùng có thể update
-    const updateData = { fullname, email, username };
+    const updateData = {
+      fullname,
+      email,
+      username,
+      phoneNumber,
+      gender,
+      nationality,
+      dateOfBirth,
+    };
     // Xóa những trường không gửi nên => undefined
     Object.keys(updateData).forEach(
       (key) => updateData[key] === undefined && delete updateData[key]

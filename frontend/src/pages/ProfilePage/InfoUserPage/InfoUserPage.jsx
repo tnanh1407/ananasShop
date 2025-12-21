@@ -60,7 +60,8 @@ const InfoUserPage = () => {
   const handleUpdatePhone = () => {
     Swal.fire({
       title: "Cập nhật số điện thoại",
-      input: user.phoneNumber || "",
+      input: "tel",
+      inputValue: user.phoneNumber || "",
       inputAttributes: {
         autocapitalize: "off",
         placeholder: "Nhập số điện thoại mới ...",
@@ -108,6 +109,68 @@ const InfoUserPage = () => {
     });
   };
 
+  // Popup Email (Tính năng đang cập nhật)
+  const handleUpdateEmail = () => {
+    Swal.fire({
+      title: "Thông báo",
+      text: "Tính năng đang cập nhật",
+      icon: "info",
+      confirmButtonText: "Xác nhận",
+      confirmButtonColor: "#0d6efd",
+    });
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      const dateOfBirth = new Date(
+        formData.year,
+        formData.month - 1,
+        formData.day
+      );
+
+      // 2.Chuẩn bị dữ liệu khi gửi lên sever
+
+      const updatedData = {
+        fulname: formData.fullname,
+        usernaem: formData.username,
+        gender: formData.gender,
+        nationality: formData.nationality,
+        dateOfBirth: dateOfBirth,
+      };
+
+      // 3 Hiển thị loading
+
+      Swal.fire({
+        title: "Đang cập nhật...",
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      //  4. Gọi API cập nhật
+      const response = await updateUser(user._id, updatedData);
+      if (response && response.user) {
+        // 5. Cập nhật lại thông tin mới vào Redux Store
+        dispatch(setCredentials({ user: response.user }));
+
+        Swal.fire({
+          icon: "success",
+          title: "Thành công!",
+          text: "Thông tin hồ sơ của bạn đã được cập nhật.",
+          confirmButtonColor: "#0d6efd",
+        });
+      }
+    } catch (error) {
+      console.log();
+      console.error("Lỗi cập nhật hồ sơ:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Thất bại",
+        text: error.message || "Đã xảy ra lỗi khi lưu thông tin.",
+      });
+    }
+  };
+
   if (!user) return null;
 
   return (
@@ -132,7 +195,7 @@ const InfoUserPage = () => {
                 <input
                   type="text"
                   name="fullname"
-                  value={formData.username}
+                  value={formData.fullname}
                   onChange={handleChange}
                 />
               </div>
@@ -143,10 +206,10 @@ const InfoUserPage = () => {
               <div className="input-wrapper">
                 <input
                   type="text"
-                  name="nickname"
-                  value={formData.nickname}
+                  name="username"
+                  value={formData.username}
                   onChange={handleChange}
-                  placeholder="Thêm nickname"
+                  placeholder="Thêm tài khoản đăng nhập của bạn"
                 />
               </div>
             </div>
@@ -247,7 +310,11 @@ const InfoUserPage = () => {
               </div>
             </div>
 
-            <button type="button" className="btn-save">
+            <button
+              type="button"
+              className="btn-save"
+              onClick={handleSaveChanges}
+            >
               Lưu thay đổi
             </button>
           </form>
@@ -281,7 +348,9 @@ const InfoUserPage = () => {
                   <span className="value">{user.email}</span>
                 </div>
               </div>
-              <button className="btn-action">Cập nhật</button>
+              <button className="btn-action" onClick={handleUpdateEmail}>
+                Cập nhật
+              </button>
             </div>
           </div>
         </Col>
