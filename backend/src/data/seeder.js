@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { connectDB } from "../config/db.js";
 
 // import các dữ liệu models Schema
-import Material from "../models/Material.js";
+import Material from "../models/Material.model.js";
 import Collection from "../models/Collection.model.js";
 import Design from "../models/Design.model.js";
 import Color from "../models/Color.model.js";

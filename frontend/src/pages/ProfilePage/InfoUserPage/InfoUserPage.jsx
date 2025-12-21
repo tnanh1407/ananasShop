@@ -1,20 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./InfoUserPage.scss";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectCurrentUser,
   setCredentials,
 } from "../../../features/auth/authSlice.jsx";
-import {
-  User,
-  Phone,
-  Mail,
-  Lock,
-  Trash2,
-  Facebook,
-  Shield,
-  Camera,
-} from "lucide-react";
+import { User, Phone, Mail, Camera } from "lucide-react";
 import { Row, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { updateUser } from "../../../api/userAPI.js";
@@ -23,26 +14,36 @@ const InfoUserPage = () => {
   const user = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
 
-  // State quản lý form input
+  //  State quản lí
   const [formData, setFormData] = useState({
     fullname: "",
-    nickname: "",
+    username: "",
     day: "1",
     month: "1",
     year: "2000",
-    gender: "male",
+    gender: "other",
     nationality: "Vietnam",
   });
 
   useEffect(() => {
-    if (user) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setFormData((prev) => ({
+    if (!user) return;
+    const dob = user.dateOfBirth ? new Date(user.dateOfBirth) : null;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFormData((prev) => {
+      const next = {
         ...prev,
-        fullname: user.fullname || "",
-        nickname: user.username || "",
-      }));
-    }
+        fullname: user.fullname,
+        username: user.username,
+        gender: user.gender || "other",
+        nationality: user.nationality || "Vietnam",
+        day: dob ? String(dob.getDate()) : prev.day,
+        month: dob ? String(dob.getMonth() + 1) : prev.month,
+        year: dob ? String(dob.getFullYear()) : prev.year,
+      };
+
+      return JSON.stringify(prev) === JSON.stringify(next) ? prev : next;
+    });
   }, [user]);
 
   const handleChange = (e) => {
@@ -72,13 +73,11 @@ const InfoUserPage = () => {
 
       preConfirm: async (newPhone) => {
         try {
-          // 1. Validate sơ bộ (Frontend)
           if (!newPhone || newPhone.trim() === "") {
             Swal.showValidationMessage("Vui lòng nhập số điện thoại");
             return false;
           }
 
-          // Regex kiểm tra số điện thoại Việt Nam (cơ bản)
           const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
           if (!phoneRegex.test(newPhone)) {
             Swal.showValidationMessage("Số điện thoại không hợp lệ");
@@ -133,14 +132,14 @@ const InfoUserPage = () => {
                 <input
                   type="text"
                   name="fullname"
-                  value={formData.fullname}
+                  value={formData.username}
                   onChange={handleChange}
                 />
               </div>
             </div>
 
             <div className="form-group">
-              <label>Nickname</label>
+              <label>Username </label>
               <div className="input-wrapper">
                 <input
                   type="text"

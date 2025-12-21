@@ -270,3 +270,39 @@ export const getProfileUserController = async (req, res) => {
     res.status(500).json({ message: "Lỗi server", error: err.message });
   }
 };
+
+// --- UPLOAD AVATAR ---
+export const updateAvatarController = async (req, res) => {
+  try {
+    // 1. Kiểm tra xem file đã được upload lên Cloudinary chưa (thông qua Multer)
+    if (!req.file) {
+      return res.status(400).json({ message: "Vui lòng chọn ảnh để upload !" });
+    }
+
+    // 2. Lấy ID người dùng từ middleware 'protect' (req.user._id)
+    const userId = req.user._id;
+
+    // 3. Cập nhật đường dẫn ảnh vào database
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        urlAvatar: req.file.path,
+      },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(400).json({ message: "Không tìm thấy người dùng" });
+    }
+
+    res.status(200).json({
+      message: " Cập nhật avatar thành công!",
+      urlAvatar: updatedUser.urlAvatar,
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Lỗi upload avatar:", error);
+    res.status(500).json({ message: "Lỗi hệ thống khi upload ảnh" });
+  }
+};

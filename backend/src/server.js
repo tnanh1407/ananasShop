@@ -4,8 +4,6 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import userRouter from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
-import Material from "./models/Material.js";
-import { materials } from "./data/materials.seed.js";
 
 dotenv.config();
 

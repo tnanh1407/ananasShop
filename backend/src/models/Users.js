@@ -15,7 +15,6 @@ const usersSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
     },
-
     username: {
       type: String,
       required: true,
@@ -40,22 +39,24 @@ const usersSchema = new mongoose.Schema(
       type: String,
       trim: true,
       sparse: true,
+      default: null,
     },
     address: {
       type: String,
+      default: null,
     },
-    sex: {
+    gender: {
       type: String,
       enum: ["male", "female", "other"],
       default: null,
     },
     nationality: {
       type: String,
-      default: "Vietnam",
+      default: null,
     },
     urlAvatar: {
       type: String,
-      default: "",
+      default: null,
     },
     dateOfBirth: {
       type: Date,

@@ -7,9 +7,11 @@ import {
   loginUserController,
   logoutUserController,
   registerUserController,
+  updateAvatarController,
   updateUserController,
 } from "../controllers/usersController.js";
 import { admin, protect } from "../middleware/authMiddleware.js";
+import { uploadUser } from "../config/cloudinary.js";
 
 const router = express.Router();
 // --- PUBLIC ROUTES (Ai cũng truy cập được) ---
@@ -22,6 +24,12 @@ router.post("/logout", logoutUserController);
 router.get("/profile", protect, getProfileUserController);
 router.patch("/:id", protect, updateUserController);
 router.get("/:id", protect, getByIdUserController);
+router.post(
+  "/upload-avatar",
+  protect,
+  uploadUser.single("avatar"),
+  updateAvatarController
+);
 
 // Route dành riêng cho Admin (Phải login VÀ là Admin)
 router.delete("/:id", protect, admin, deleteUserController);
