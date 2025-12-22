@@ -281,7 +281,7 @@ export const getProfileUserController = async (req, res) => {
     if (user) {
       res.status(200).json({
         message: "Lấy thông tin người dùng thành công!",
-        user: user,
+        user: user, 
       });
     }
   } catch (err) {
