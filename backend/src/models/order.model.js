@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { resolveVariantPrice } from "../helpers/pricing.helper";
 
 const orderSchema = new mongoose.Schema(
   {
@@ -22,7 +23,7 @@ const orderSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "ProductVariant",
           required: true,
-        }, // Size/Color cụ thể
+        },
       },
     ],
     shippingAddress: {
@@ -30,8 +31,29 @@ const orderSchema = new mongoose.Schema(
       city: { type: String, required: true },
       phone: { type: String, required: true },
     },
-    paymentMethod: { type: String, required: true, default: "COD" }, // COD, PayPal, VNPAY
-    totalPrice: { type: Number, required: true, default: 0.0 },
+    paymentMethod: {
+      type: String,
+      enum: ["COD", "MOMO", "VNPAY"],
+      default: "COD",
+    },
+    itemsPrice: { type: Number, default: 0 },
+    shippingPrice: { type: Number, default: 0 },
+    taxPrice: { type: Number, default: 0 },
+
+    promotion: {
+      promotionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Promotion",
+      },
+      code: String,
+      discountType: {
+        type: String,
+        enum: ["percentage", "fixed"],
+      },
+      discountValue: Number,
+      discountAmount: { type: Number, default: 0 }, //   tổng số tiền đã giảm
+    },
+    totalPrice: { type: Number, default: 0 },
     isPaid: { type: Boolean, required: true, default: false },
     paidAt: { type: Date },
     status: {
@@ -42,6 +64,36 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+orderSchema.pre("save", function (next) {
+  // 1️⃣ Tính tổng tiền hàng
+  this.itemsPrice = this.orderItems.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  );
+
+  // 2️⃣ Tính tiền giảm giá
+  let discount = 0;
+
+  if (this.promotion && this.promotion.discountType) {
+    if (this.promotion.discountType === "percentage") {
+      discount = (this.itemsPrice * this.promotion.discountValue) / 100;
+    } else if (this.promotion.discountType === "fixed") {
+      discount = this.promotion.discountValue;
+    }
+  }
+
+  this.promotion.discountAmount = Math.min(discount, this.itemsPrice);
+
+  // 3️⃣ Tổng tiền cuối
+  this.totalPrice =
+    this.itemsPrice +
+    this.shippingPrice +
+    this.taxPrice -
+    this.promotion.discountAmount;
+
+  next();
+});
 
 const Order = mongoose.model("Order", orderSchema);
 export default Order;

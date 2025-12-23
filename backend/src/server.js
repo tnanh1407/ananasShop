@@ -10,6 +10,8 @@ import designRouter from "./routes/designRoutes.js";
 import meterialRouter from "./routes/materialRoutes.js";
 import collectionRouter from "./routes/collectionRoutes.js";
 import productRouter from "./routes/productRoutes.js";
+import sizeRouter from "./routes/sizeRoutes.js";
+import variantRouter from "./routes/productVariantRoutes.js";
 
 dotenv.config();
 
@@ -27,7 +29,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // api
+app.use("/api/variant", variantRouter);
 app.use("/api/product", productRouter);
+app.use("/api/size", sizeRouter);
 app.use("/api/controller", collectionRouter);
 app.use("/api/material", meterialRouter);
 app.use("/api/design", designRouter);

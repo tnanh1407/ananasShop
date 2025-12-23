@@ -1,6 +1,8 @@
 import Product from "../models/Products.model.js";
 import ProductVariant from "../models/ProductVariant.model.js";
 import mongoose from "mongoose";
+import "../models/Color.model.js";
+import "../models/Size.model.js";
 
 // --- 1. TẠO SẢN PHẨM MỚI (CREATE) ---
 export const createProductController = async (req, res) => {
@@ -140,7 +142,8 @@ export const getProductByIdController = async (req, res) => {
     res.status(200).json({
       success: true,
       product,
-      variants, // Trả về kèm các biến thể để người dùng chọn Size/Màu
+      count_variants: variants.length,
+      variants,
     });
   } catch (error) {
     console.error("Lỗi getProductByIdController:", error);
