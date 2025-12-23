@@ -2,29 +2,34 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { connectDB } from "../config/db.js";
 
-// import các dữ liệu models Schema
+// Import các models
 import Material from "../models/Material.model.js";
 import Collection from "../models/Collection.model.js";
 import Design from "../models/Design.model.js";
 import Color from "../models/Color.model.js";
 import Product from "../models/Products.model.js";
 import Size from "../models/Size.model.js";
+import ProductVariant from "../models/ProductVariant.model.js";
+import User from "../models/Users.js"; // Import thêm User
+import Cart from "../models/cart.model.js"; // Import thêm Cart
 
-// import các dữ liệu cố định
+// Import các dữ liệu cố định
 import { materials } from "./materials.seed.js";
 import { collections } from "./collection.seed.js";
 import { colors } from "./colors.seed.js";
 import { designs } from "./design.seed.js";
 import { sizes } from "./size.seed.js";
 import { sampleProducts } from "./products.seed.js";
-import ProductVariant from "../models/ProductVariant.model.js";
+import { generateSampleCarts } from "./cart.seed.js"; // Import hàm logic mới
 
 dotenv.config();
 
 const importData = async () => {
   try {
     await connectDB();
+
     // 1. Xóa toàn bộ dữ liệu cũ
+    await Cart.deleteMany(); // Xóa giỏ hàng trước
     await ProductVariant.deleteMany();
     await Product.deleteMany();
     await Material.deleteMany();
@@ -33,7 +38,7 @@ const importData = async () => {
     await Color.deleteMany();
     await Size.deleteMany();
 
-    // 2. Chèn các bảng phụ và lấy lại danh sách đã chèn để có ID
+    // 2. Chèn các bảng phụ
     const createdCollections = await Collection.insertMany(collections);
     const createdMaterials = await Material.insertMany(materials);
     const createdDesigns = await Design.insertMany(designs);
@@ -42,36 +47,31 @@ const importData = async () => {
 
     console.log("Đã khởi tạo xong các bảng danh mục.");
 
-    // 3. Chuẩn bị dữ liệu Product với các ID thực tế
-    const productToImport = sampleProducts.map((p, index) => {
-      return {
-        ...p,
-        collectionId: createdCollections[index % createdCollections.length]._id,
-        design: createdDesigns[index % createdDesigns.length]._id,
-      };
-    });
+    // 3. Chuẩn bị dữ liệu Product
+    const productToImport = sampleProducts.map((p, index) => ({
+      ...p,
+      collectionId: createdCollections[index % createdCollections.length]._id,
+      design: createdDesigns[index % createdDesigns.length]._id,
+    }));
 
     const createdProducts = await Product.insertMany(productToImport);
-    console.log("Đã thêm  sản phẩm mẫu.");
+    console.log("Đã thêm sản phẩm mẫu.");
 
-    // 4. Tạo Biến thể (Variants) để giải quyết vấn đề nhiều Màu/Size
+    // 4. Tạo Biến thể (Variants)
     const variants = [];
     createdProducts.forEach((product) => {
       let validSizes = createdSizes.filter(
         (size) => size.type === product.category
       );
-
-      if (validSizes.length === 0) {
+      if (validSizes.length === 0)
         validSizes = createdSizes.filter((size) => size.type === "none");
-      }
 
       const radomMaterials = [...createdMaterials]
-        .sort(() => 0.5 - Math.random()) // Trộn ngẫu nhiên danh sách màu
-        .slice(0, Math.floor(Math.random() * 3) + 1); // Lấy ngẫu nhiên 1, 2 hoặc 3 màu
-
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 2);
       const randomColors = [...createdColors]
-        .sort(() => 0.5 - Math.random()) // Trộn ngẫu nhiên danh sách màu
-        .slice(0, Math.floor(Math.random() * 3) + 1); // Lấy ngẫu nhiên 1, 2 hoặc 3 màu
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 2);
 
       randomColors.forEach((color) => {
         validSizes.forEach((size) => {
@@ -81,42 +81,54 @@ const importData = async () => {
               colorId: color._id,
               sizeId: size._id,
               materialIds: material,
-              stock: Math.floor(Math.random() * 100) + 10, // Tồn kho ngẫu nhiên 10-110
+              stock: Math.floor(Math.random() * 100) + 10,
             });
           });
         });
       });
     });
-    await ProductVariant.insertMany(variants);
-    console.log(`Đã tạo ${variants.length} biến thể cho các sản phẩm`);
+    const createdVariants = await ProductVariant.insertMany(variants);
+    console.log(`Đã tạo ${createdVariants.length} biến thể.`);
+
+    // --- 5. TẠO GIỎ HÀNG MẪU (Dựa trên User đã có sẵn trong DB) ---
+    const users = await User.find();
+    if (users.length > 0) {
+      const carts = generateSampleCarts(users, createdVariants);
+      await Cart.insertMany(carts);
+      console.log(`Đã tạo giỏ hàng cho ${users.length} người dùng.`);
+    } else {
+      console.log(
+        "Cảnh báo: Không có người dùng nào trong DB để tạo giỏ hàng mẫu."
+      );
+    }
 
     console.log("Dữ liệu đã được khởi tạo thành công!");
     process.exit();
   } catch (e) {
     console.log("Lỗi khi nhập dữ liệu : ", e);
-    process.exit();
+    process.exit(1);
   }
 };
 
 const destroyData = async () => {
   try {
     await connectDB();
+    await Cart.deleteMany(); // Thêm xóa giỏ hàng vào hàm hủy dữ liệu
+    await ProductVariant.deleteMany();
+    await Product.deleteMany();
     await Material.deleteMany();
     await Collection.deleteMany();
     await Design.deleteMany();
     await Color.deleteMany();
     await Size.deleteMany();
-    await Product.deleteMany();
-    await ProductVariant.deleteMany();
-    console.log("Đã xóa sạch dữ liệu Material và Collection");
+
+    console.log("Đã xóa sạch toàn bộ dữ liệu mẫu.");
     process.exit();
   } catch (e) {
-    console.error("Lỗi khi xóa dữ liệu: ", error);
+    console.error("Lỗi khi xóa dữ liệu: ", e);
     process.exit(1);
   }
 };
-
-// Kiểm tra tham số từ dòng lệnh để quyết định hành động
 
 if (process.argv[2] === "-d") {
   destroyData();
