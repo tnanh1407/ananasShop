@@ -13,6 +13,7 @@ export const authSlice = createSlice({
     //  Hành động khi đăng nhập thành công !
     setCredentials: (state, action) => {
       const { user } = action.payload;
+      console.log("USER FROM API:", action.payload.user);
       state.user = user;
       state.isAuthenticated = true;
       state.isLoading = false;

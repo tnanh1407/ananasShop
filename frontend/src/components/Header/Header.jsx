@@ -52,6 +52,7 @@ const AnnouncementBar = () => {
 };
 const Header = () => {
   const user = useSelector(selectCurrentUser);
+  console.log("DATA của header :", user);
   const nagative = useNavigate();
   const [isHoveredProduct, setIsHoveredProduct] = useState(false);
   const [isHoveredMale, setIsHoveredMale] = useState(false);

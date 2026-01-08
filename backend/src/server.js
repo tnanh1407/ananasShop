@@ -32,7 +32,7 @@ app.use(cookieParser());
 app.use("/api/variant", variantRouter);
 app.use("/api/product", productRouter);
 app.use("/api/size", sizeRouter);
-app.use("/api/controller", collectionRouter);
+app.use("/api/collecti", collectionRouter);
 app.use("/api/material", meterialRouter);
 app.use("/api/design", designRouter);
 app.use("/api/color", colorRouter);

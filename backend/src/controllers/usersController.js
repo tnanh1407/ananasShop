@@ -92,7 +92,6 @@ export const loginUserController = async (req, res) => {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const userResponse = user.toObject();
-      console.log("User Response before delete password:", userResponse);
       delete userResponse.password;
 
       const token = generateToken(user._id);
@@ -280,12 +279,12 @@ export const getProfileUserController = async (req, res) => {
     const user = req.user;
     if (user) {
       res.status(200).json({
-        message: "Lấy thông tin người dùng thành công!",
-        user: user, 
+        message: "Get f5 thành công !",
+        user: user,
       });
     }
   } catch (err) {
-    res.status(500).json({ message: "Lỗi server", error: err.message });
+    res.status(500).json({ message: "Get f5 thất bại" + err.message });
   }
 };
 

@@ -22,7 +22,6 @@ export const calculateCartItemPrice = (variant, product, quantity = 1) => {
 };
 
 //  3. FUNCTION CALCULATE ALL CART
-
 export const calculateCartItemsPrice = (cartItems = []) => {
   return cartItems.reduce((total, item) => {
     const { variant, product, quantity } = item;
