@@ -1,87 +1,87 @@
-components/: Chứa các component tái sử dụng (Header, Footer, Button, ProductCard…).
+# Welcome to React Router!
 
-features/: Chứa các slice của Redux Toolkit và component đặc thù cho slice đó (ví dụ: cartSlice, productsSlice).
+A modern, production-ready template for building full-stack React applications using React Router.
 
-pages/: Chứa các page theo route, ví dụ Home, ProductDetail, Cart, Login.
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
 
-routes/: Quản lý tất cả route bằng react-router-dom.
+## Features
 
-styles/: SCSS global, biến màu, mixin, font…
+- 🚀 Server-side rendering
+- ⚡️ Hot Module Replacement (HMR)
+- 📦 Asset bundling and optimization
+- 🔄 Data loading and mutations
+- 🔒 TypeScript by default
+- 🎉 TailwindCSS for styling
+- 📖 [React Router docs](https://reactrouter.com/)
 
-app/store.js: Tạo Redux store và combine slice.
+## Getting Started
 
-api/: Nếu cần gọi API backend (mock JSON hoặc thật).
+### Installation
 
-adidas-clone/
-│
-├─ public/
-│   └─ index.html
-│
-├─ src/
-│   ├─ api/                # Quản lý logic gọi API
-│   │   ├─ axiosClient.js # Cấu hình Axios, Interceptors
-│   │   └─ productApi.js    # Các hàm gọi API liên quan đến sản phẩm
-│   │
-│   ├─ app/                # Cấu hình Redux Store
-│   │   └─ store.js
-│   │
-│   ├─ assets/             # Ảnh, fonts, icon SVG (không phải component)
-│   │   ├─ images/
-│   │   └─ fonts/
-│   │
-│   ├─ components/         # Component UI tái sử dụng (Dumb Components)
-│   │   ├─ Button/
-│   │   ├─ Header/
-│   │   ├─ Footer/
-│   │   ├─ ProductCard/
-│   │   └─ Modal/
-│   │
-│   ├─ constants/          # Các hằng số (constants)
-│   │   ├─ paths.js       # Hằng số cho Router path
-│   │   └─ index.js       # Các hằng số chung
-│   │
-│   ├─ features/           # Redux Slice + Component logic (Feature Components)
-│   │   ├─ cart/
-│   │   │   ├─ cartSlice.js
-│   │   │   ├─ CartList.jsx     # Component chứa logic giỏ hàng (kết nối Redux)
-│   │   │   └─ CartItem.jsx     # Component con hiển thị 1 item trong giỏ
-│   │   ├─ products/
-│   │   │   ├─ productsSlice.js
-│   │   │   └─ ProductList.jsx   # Component hiển thị danh sách sản phẩm
-│   │   └─ auth/
-│   │       ├─ authSlice.js
-│   │       └─ LoginForm.jsx
-│   │
-│   ├─ hooks/              # Custom Hooks
-│   │   ├─ useDebounce.js
-│   │   └─ useClickOutside.js
-│   │
-│   ├─ layouts/            # Các bố cục chính của trang (Layouts)
-│   │   ├─ MainLayout.jsx   # Header + Outlet + Footer
-│   │   └─ AuthLayout.jsx   # Layout cho trang Login/Register
-│   │
-│   ├─ pages/              # Component cấp độ Route (View Containers)
-│   │   ├─ Home/
-│   │   ├─ ProductDetail/
-│   │   ├─ CartPage/          # (Chỉ gọi Layout và Feature CartList)
-│   │   ├─ LoginPage/
-│   │   └─ NotFoundPage/
-│   │
-│   ├─ routes/             # Quản lý định tuyến
-│   │   └─ AppRouter.jsx
-│   │
-│   ├─ styles/             # SCSS Global
-│   │   ├─ \_variables.scss # (Dùng cho additionalData)
-│   │   ├─ \_mixins.scss    # (Dùng cho additionalData)
-│   │   ├─ \_reset.scss     # Reset/Normalize CSS
-│   │   └─ main.scss       # File chính (Import \_reset.scss)
-│   │
-│   ├─ utils/              # Các hàm tiện ích (pure functions)
-│   │   ├─ helpers.js
-│   │   └─ formatters.js
-│   │
-│   ├─ App.jsx            # Nơi khởi tạo AppRouter
-│   └─ main.jsx           # (Hoặc index.js) - Khởi tạo Redux Provider
-│
-├─ package.json
-└─ vite.config.js
+Install the dependencies:
+
+```bash
+npm install
+```
+
+### Development
+
+Start the development server with HMR:
+
+```bash
+npm run dev
+```
+
+Your application will be available at `http://localhost:5173`.
+
+## Building for Production
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+## Deployment
+
+### Docker Deployment
+
+To build and run using Docker:
+
+```bash
+docker build -t my-app .
+
+# Run the container
+docker run -p 3000:3000 my-app
+```
+
+The containerized application can be deployed to any platform that supports Docker, including:
+
+- AWS ECS
+- Google Cloud Run
+- Azure Container Apps
+- Digital Ocean App Platform
+- Fly.io
+- Railway
+
+### DIY Deployment
+
+If you're familiar with deploying Node applications, the built-in app server is production-ready.
+
+Make sure to deploy the output of `npm run build`
+
+```
+├── package.json
+├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
+├── build/
+│   ├── client/    # Static assets
+│   └── server/    # Server-side code
+```
+
+## Styling
+
+This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+
+---
+
+Built with ❤️ using React Router.
