@@ -34,13 +34,23 @@ const sessionSchema = new Schema(
 
     expiredAt: {
       type: Date,
-      required: true,
-      index: true
+      required: true
     },
 
     lastActivityAt: {
       type: Date,
       default: Date.now
+    },
+
+    // 🔥 Level 3 security
+    isRevoked: {
+      type: Boolean,
+      default: false
+    },
+
+    replacedByToken: {
+      type: String,
+      default: null
     }
   },
   {
@@ -51,7 +61,6 @@ const sessionSchema = new Schema(
     versionKey: false,
     toJSON: {
       virtuals: true,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transform: (_doc, ret: any) => {
         ret.id = ret._id
         delete ret._id
@@ -61,7 +70,7 @@ const sessionSchema = new Schema(
   }
 )
 
-// TTL index → tự xoá session khi hết hạn
+// 🔥 TTL index: tự động xoá session khi expiredAt đến hạn
 sessionSchema.index({ expiredAt: 1 }, { expireAfterSeconds: 0 })
 
 export type SessionType = InferSchemaType<typeof sessionSchema>

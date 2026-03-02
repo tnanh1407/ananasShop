@@ -8,14 +8,14 @@ const userSchema = new Schema(
       type: String,
       default: uuidv4
     },
-    fullname: { type: String, required: true },
-    username: { type: String, required: true, unique: true, trim: true },
+    fullName: { type: String, required: true },
+    userName: { type: String, required: true, unique: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     passwordHash: { type: String, required: true, select: false }, // Luôn ẩn khi query
     phoneNumber: { type: String, unique: true, sparse: true }, // sparse cho phép null nhưng vẫn unique
-    address: { type: String, default: '' },
-    university: { type: String, default: '' },
-    avatarUrl: { type: String, default: '' },
+    address: { type: String, default: null },
+    university: { type: String, default: null },
+    avatarUrl: { type: String, default: null },
     role: {
       type: String,
       enum: ['user', 'admin', 'superadmin'],
@@ -26,7 +26,7 @@ const userSchema = new Schema(
       enum: ['male', 'female', 'other'],
       default: 'other'
     },
-    dateOfBirth: { type: Date, default: '' },
+    dateOfBirth: { type: Date, default: null },
     isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null }
@@ -48,7 +48,8 @@ const userSchema = new Schema(
   }
 )
 
-userSchema.index({ email: 1, username: 1 })
+userSchema.index({ userName: 1 }, { unique: true })
+userSchema.index({ email: 1 }, { unique: true })
 
 export type UserType = InferSchemaType<typeof userSchema>
 const UserModel = model<UserType>('User', userSchema)

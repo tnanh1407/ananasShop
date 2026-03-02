@@ -32,10 +32,10 @@
     "prettier": "^3.8.1",
     "rimraf": "^6.1.2",
     "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0",
-    "tsconfig-paths": "^4.2.0"
+    "typescript-eslint": "^8.54.0"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -43,6 +43,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.5",

@@ -5,10 +5,10 @@ const MongoDB = () => {
   mongoose
     .connect(mongUri)
     .then(() => {
-      console.log('✅ Kết nối MongoDB thành công!')
+      console.info('[Connect MongoDB] : ✅ Kết nối MongoDB thành công')
     })
     .catch((error) => {
-      console.log(`❌ Lỗi kết nối MongoDB: ${error}`)
+      console.warn(`[Connect MongoDB] :❌ Lỗi kết nối MongoDB: ${error}`)
     })
 }
 

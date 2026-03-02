@@ -1,21 +1,29 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import UserModel from '~/models/user.model.js'
 import bcrypt from 'bcrypt'
+import { AppError } from '~/utils/AppError.js'
 
-export const getProfileController = async (req: Request, res: Response) => {
+// Lấy thông tin profile của người dùng || xử lí cho f5
+export const getProfileController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user!.userId
     const user = await UserModel.findById(userId).select('-isActive -deletedAt')
-    console.log('check point 1 ', user)
-    if (!user) return res.status(404).json({ message: 'User không tồn tại' })
-    res.status(200).json({ user, message: 'Lấy dữ liệu thành công' })
+    if (!user) {
+      throw new AppError('Không tìm thấy người dùng', 404)
+    }
+    return res.status(200).json({
+      data: user,
+      message: 'Lấy thông tin người dùng thành công'
+    })
   } catch (error) {
-    console.error('Lỗi getProfileController :  ', error)
+    next(error)
   }
 }
 
-export const createUserController = async (req: Request, res: Response) => {
+// Thêm người dùng mới (admin tạo)
+export const createUserController = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    
     const {
       fullname,
       username,
@@ -35,6 +43,7 @@ export const createUserController = async (req: Request, res: Response) => {
       $or: [{ email }, { username }]
     })
     if (existedUser) {
+      console.error('[createUserController][existedUser] : Email hoặc username đã tồn tại')
       return res.status(400).json({ message: 'Email hoặc username đã tồn tại' })
     }
 
@@ -59,45 +68,39 @@ export const createUserController = async (req: Request, res: Response) => {
       message: 'Tạo user thành công'
     })
   } catch (error) {
-    console.error('createUser error:', error)
-    return res.status(500).json({ message: 'Lỗi server' })
+    console.error('[createUserController][error] : ', error)
+    return res.status(500).json({ message: 'Lỗi hệ thống' })
   }
 }
 
-export const getUsersController = async (req: Request, res: Response) => {
+export const getUsersController = async (req: Request, res: Response, next: NextFunction ) => {
   try {
     const users = await UserModel.find({ isDeleted: false })
-
     return res.status(200).json({
       data: users,
       message: 'Lấy danh sách user thành công'
     })
   } catch (error) {
-    console.error('getUsers error:', error)
-    return res.status(500).json({ message: 'Lỗi server' })
+    next(error)
   }
 }
 
-export const getUserByIdController = async (req: Request, res: Response) => {
+export const getUserByIdController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params
-
     const user = await UserModel.findOne({
       _id: id,
       isDeleted: false
     })
-
     if (!user) {
-      return res.status(404).json({ message: 'User không tồn tại' })
+      throw new AppError('User không tồn tại', 404)
     }
-
     return res.status(200).json({
       data: user,
-      message: 'Lấy user thành công'
+      message: 'Lấy user theo idthành công'
     })
   } catch (error) {
-    console.error('getUserById error:', error)
-    return res.status(500).json({ message: 'Lỗi server' })
+    next(error)
   }
 }
 

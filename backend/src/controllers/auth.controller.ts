@@ -1,38 +1,32 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import bcrypt from 'bcrypt'
 import { z } from 'zod'
 import UserModel from '../models/user.model.js'
-import { registerSchema } from '~/schemas/auth.schema.js'
 import { generateAccessToken, generateRefreshToken, getRefreshTokenExpiredAt } from '~/utils/token.js'
 import SessionModel from '~/models/session.model.js'
-import { UserPopulated } from '~/types/auth.type.js'
+import { registerShema } from '~/schemas/auth.schema.js'
+import { AppError } from '~/utils/AppError.js'
 
-export const registerCpntroller = async (req: Request, res: Response) => {
+const saltRounds = 10 // Số vòng băm cho bcrypt
+
+export const registerController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // 1. Validated dữ liệu từ Zod
-    const input = registerSchema.parse(req.body)
-
-    // 2. Kiểm tra xem user đã tồn tại chưa (email hoặc username)
-    const usernameExisting = await UserModel.findOne({ username: input.username })
+    const input = registerShema.parse(req.body)
+    const usernameExisting = await UserModel.findOne({ userName: input.userName })
     if (usernameExisting) {
-      console.error('Check username : Đã tồn tại trong hệ thống !')
-      return res.status(400).json({ message: 'username đã tồn tại trong hệ thống' })
+      throw new AppError('username  đã tồn tại trong hệ thống', 400)
     }
 
     const emailExisting = await UserModel.findOne({ email: input.email })
     if (emailExisting) {
-      console.error('Check email : Đã tồn tại trong hệ thống !')
-      return res.status(400).json({ message: 'email đã tồn tại trong hệ thống' })
+      throw new AppError('email đã tồn tại trong hệ thống', 400)
     }
 
-    // 3. hasspassed password
-    const saltRounds = 10
     const password = await bcrypt.hash(input.password, saltRounds)
 
-    // 4 Lưu vào database
     const newUser = await UserModel.create({
-      fullname: input.fullname,
-      username: input.username,
+      fullName: input.fullName,
+      userName: input.userName,
       email: input.email,
       passwordHash: password,
       role: 'user',
@@ -41,46 +35,56 @@ export const registerCpntroller = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       message: 'Đăng kí thành công !',
-      user: {
+      data: {
         id: newUser.id,
-        fullname: newUser.fullname,
-        username: newUser.username,
+        fullName: newUser.fullName,
+        userName: newUser.userName,
         email: newUser.email
       }
     })
   } catch (error) {
-    console.error(`Function register in Controller :  ${error}`)
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ message: 'Dữ liệu không hợp lệ', error: error.message })
+      return next(new AppError(error.issues.map((e) => e.message).join(', '), 400))
     }
-    console.error('Register error:', error)
-    return res.status(500).json({ message: 'Lỗi hệ thống' })
+    next(error)
   }
 }
 
-export const loginController = async (req: Request, res: Response) => {
+export const loginController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { username, password } = req.body
-    // 1. Tìm user
-    const user = await UserModel.findOne({ username }).select('+passwordHash')
-    if (!user) {
-      console.error('Không tìm thấy username này')
-      return res.status(401).json({ message: 'username hoặc mật khẩu không đúng' })
+    const { identifier, password } = req.body
+    if (!password || !identifier) {
+      throw new AppError('Vui lòng cung cấp đầy đủ thông tin đăng nhập', 400)
     }
-    const isMatch = await bcrypt.compare(password, user.passwordHash)
-    if (!isMatch) {
-      console.error('Mật khẩu không khớp')
-      return res.status(401).json({ message: 'username hoặc mật khẩu không đúng' })
+    const user = await UserModel.findOne({
+      $or: [
+        {
+          userName: identifier
+        },
+        {
+          email: identifier
+        }
+      ]
+    }).select('+passwordHash')
+
+    if (!user) {
+      throw new AppError('username hoặc mật khẩu không đúng', 401)
     }
 
-    // 3. Tạo tokens
+    if (!user.isActive) {
+      throw new AppError('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để biết thêm chi tiết.', 403)
+    }
+
+    const isMatch = await bcrypt.compare(password, user.passwordHash)
+    if (!isMatch) {
+      throw new AppError('username hoặc mật khẩu không đúng', 401)
+    }
     const accessToken = generateAccessToken({
       userId: user.id,
       role: user.role
     })
 
     const refreshToken = generateRefreshToken()
-    // 4. Lưu session
     await SessionModel.create({
       userId: user.id,
       refreshToken,
@@ -89,7 +93,6 @@ export const loginController = async (req: Request, res: Response) => {
       expiredAt: getRefreshTokenExpiredAt()
     })
 
-    // 5. Set cookie refresh token
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -99,61 +102,49 @@ export const loginController = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: 'Đăng nhập thành công',
-      accessToken,
-      user: {
+      accessToken: accessToken,
+      data: {
         id: user.id,
-        fullname: user.fullname,
-        username: user.username,
+        fullName: user.fullName,
+        userName: user.userName,
         email: user.email,
         role: user.role
       }
     })
   } catch (error) {
-    console.error('Login error:', error)
-    return res.status(500).json({ message: 'Lỗi hệ thống' })
+    next(error)
   }
 }
 
-export const refreshToken = async (req: Request, res: Response) => {
+// Refresh Token
+export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const oldToken = req.cookies.refreshToken
+    if (!oldToken) {
+      throw new AppError('Không tìm thấy refresh token ', 400)
+    }
+
+    const session = await SessionModel.findOne({ refreshToken: oldToken })
+
+    if (!session) {
+      throw new AppError('Refresh token không hợp lệ', 401)
+    }
+
+    if (session.isRevoked) {
+      await SessionModel.deleteOne({ userId: session.userId })
+      throw new AppError('Phát hiện token reuse . vui lòng đăng nhập lại ', 401)
+    }
+    
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const logoutController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const refreshToken = req.cookies.refreshToken
     if (!refreshToken) {
-      console.error('Không tìm thấy refresh token ')
-      return res.status(401).json({ message: 'Không có refresh token' })
-    }
-
-    // 1. Tìm session
-    const session = await SessionModel.findOne({ refreshToken }).populate<{ userId: UserPopulated }>('userId', 'role')
-    if (!session || !session.userId) {
-      console.error('Refresh token không hợp lệ')
-      return res.status(401).json({ message: 'Refresh token không hợp lệ' })
-    }
-
-    // 2. Kiểm tra session Còn hạn không
-    if (session.expiredAt < new Date()) {
-      await session.deleteOne()
-      console.error('Refresh token đã hết hạn')
-      return res.status(401).json({ message: 'Refresh token đã hết hạn' })
-    }
-
-    const user = session.userId as { _id: string; role: string }
-    // 3. Tạo accessToken mới
-    const accessToken = generateAccessToken({ userId: user._id, role: user.role })
-
-    // 4. Cập nhật hoạt động cuối
-    session.lastActivityAt = new Date()
-    await session.save()
-    return res.status(200).json({ accessToken })
-  } catch (error) {
-    console.error('Refresh token error:', error)
-    return res.status(500).json({ message: 'Lỗi hệ thống' })
-  }
-}
-export const logoutController = async (req: Request, res: Response) => {
-  try {
-    const refreshToken = req.body.refreshToken
-    if (!refreshToken) {
-      return res.status(200).json({ message: 'Người dùng đã logout' })
+      throw new AppError('Không tìm thấy refresh token', 400)
     }
     await SessionModel.deleteOne({ refreshToken })
     res.clearCookie('refreshToken', {
@@ -163,12 +154,11 @@ export const logoutController = async (req: Request, res: Response) => {
     })
     return res.status(200).json({ message: 'Logout thành công' })
   } catch (error) {
-    console.error('Logout error:', error)
-    return res.status(500).json({ message: 'Lỗi hệ thống' })
+    next(error)
   }
 }
 
-export const logoutAllController = async (req: Request, res: Response) => {
+export const logoutAllController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user!.userId
     await SessionModel.deleteMany({ userId: userId })
@@ -179,7 +169,6 @@ export const logoutAllController = async (req: Request, res: Response) => {
     })
     return res.status(200).json({ message: 'Đã đăng xuất khỏi tất cả thiết bị' })
   } catch (error) {
-    console.error('Logout all error:', error)
-    return res.status(500).json({ message: 'Lỗi hệ thống' })
+    next(error)
   }
 }

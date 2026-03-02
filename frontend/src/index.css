@@ -1,0 +1,35 @@
+@config "../tailwind.config.js";
+@import "tailwindcss";
+
+
+/* LIGHT MODE */
+:root {
+  --bg: 245 245 245;
+  --fg: 17 17 17;
+  --primary: 241 90 36;     /* cam Ananas */
+  --border: 229 229 229;
+  --muted: 85 85 85;
+}
+
+/* DARK MODE (giữ vibe street hơn) */
+.dark {
+  --bg: 17 17 17;
+  --fg: 245 245 245;
+  --primary: 255 107 53;   /* cam sáng hơn chút */
+  --border: 50 50 50;
+  --muted: 160 160 160;
+}
+
+@layer base {
+  body {
+    @apply text-base overflow-x-clip bg-background text-foreground font-inter;
+  }
+
+  p {
+    @apply text-sm leading-7 font-inter;
+  }
+
+  button {
+    @apply px-1 py-1 border cursor-pointer;
+  }
+}
