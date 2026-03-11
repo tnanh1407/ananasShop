@@ -19,10 +19,6 @@ const baseUserShema = z
       .regex(/[!@#$%^&*(),.?":{}|<>]/, 'Password phải chứa ít nhất 1 ký tự đặc biệt')
   })
   .strict()
-// .transform((data) => ({
-//   ...data,
-//   fullName: `${data.firstName} ${data.lastName}`
-// }))
 
 export const registerShema = baseUserShema
   .extend({

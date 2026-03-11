@@ -15,10 +15,9 @@ const sessionSchema = new Schema(
       index: true
     },
 
-    refreshToken: {
+    refreshTokenHash: {
       type: String,
       required: true,
-      unique: true,
       index: true
     },
 
@@ -42,15 +41,19 @@ const sessionSchema = new Schema(
       default: Date.now
     },
 
-    // 🔥 Level 3 security
     isRevoked: {
       type: Boolean,
       default: false
     },
 
-    replacedByToken: {
+    : {
       type: String,
-      default: null
+      default: null,
+      ref: 'Session'
+    },
+    deviceName: {
+      type: String,
+      default: 'unknown'
     }
   },
   {
@@ -72,7 +75,7 @@ const sessionSchema = new Schema(
 
 // 🔥 TTL index: tự động xoá session khi expiredAt đến hạn
 sessionSchema.index({ expiredAt: 1 }, { expireAfterSeconds: 0 })
-
+sessionSchema.index({ userId: 1, createdAt: -1 })
 export type SessionType = InferSchemaType<typeof sessionSchema>
 
 const SessionModel = model<SessionType>('Session', sessionSchema)

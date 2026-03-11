@@ -1,20 +1,19 @@
-import { Schema, model, InferSchemaType } from 'mongoose'
+import { create } from 'domain'
+import { NextFunction } from 'express'
+import { Schema, model, InferSchemaType, Document } from 'mongoose'
 import { v4 as uuidv4 } from 'uuid' // v4 tạo UUID ngẫu nhiên
+import { extend } from 'zod/mini'
 
-// MONGOOSE SCHEMA (Định nghĩa cấu trúc lưu trữ DB) ---
 const userSchema = new Schema(
   {
     _id: {
       type: String,
       default: uuidv4
     },
-    fullName: { type: String, required: true },
-    userName: { type: String, required: true, unique: true, trim: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
-    passwordHash: { type: String, required: true, select: false }, // Luôn ẩn khi query
-    phoneNumber: { type: String, unique: true, sparse: true }, // sparse cho phép null nhưng vẫn unique
-    address: { type: String, default: null },
-    university: { type: String, default: null },
+    fullName: { type: String },
+    username: { type: String, unique: true, trim: true },
+    email: { type: String, unique: true, lowercase: true },
+    passwordHash: { type: String, select: false, default: null }, // Luôn ẩn khi query
     avatarUrl: { type: String, default: null },
     role: {
       type: String,
@@ -29,13 +28,50 @@ const userSchema = new Schema(
     dateOfBirth: { type: Date, default: null },
     isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
-    deletedAt: { type: Date, default: null }
+    deletedAt: { type: Date, default: null },
+    emailVerified: {
+      type: Boolean,
+      default: false
+    },
+    lastLoginAt: {
+      type: Date,
+      default: null
+    },
+    socialLogin: [
+      {
+        provider: {
+          type: String,
+          enum: ['google', 'facebook']
+        },
+        providerId: {
+          type: String
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
+    address: [
+      {
+        fullNameAddress: { type: String, trim: true, required: true },
+        phoneNumber: { type: String, trim: true, required: true },
+        province: { type: String, required: true, trim: true },
+        district: { type: String, required: true, trim: true },
+        ward: { type: String, required: true, trim: true },
+        addressDetail: { type: String, required: true, trim: true },
+        country: { type: String, required: true, trim: true, default: 'Vietnam' },
+        isDefault: { type: Boolean, default: false },
+        postalCode: { type: String, trim: true }
+      }
+    ],
+    PasswordHistory: [{ passwordHash: { type: String }, createdAt: { type: Date, default: Date.now } }]
   },
   {
-    timestamps: true, // Tự động tạo createdAt và updatedAt (datetime)
+    timestamps: true,
     toJSON: {
       virtuals: true,
-      versionKey: true, // tự động xóa phiên bản
+      versionKey: false,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transform: (_doc, ret: any) => {
         ret.id = ret._id
@@ -48,10 +84,10 @@ const userSchema = new Schema(
   }
 )
 
-userSchema.index({ userName: 1 }, { unique: true })
+
+userSchema.index({ 'socialLogin.provider': 1, 'socialLogin.providerId': 1 })
+userSchema.index({ username: 1 }, { unique: true })
 userSchema.index({ email: 1 }, { unique: true })
 
 export type UserType = InferSchemaType<typeof userSchema>
-const UserModel = model<UserType>('User', userSchema)
-
-export default UserModel
+export const UserModel = model<UserType>('User', userSchema)
